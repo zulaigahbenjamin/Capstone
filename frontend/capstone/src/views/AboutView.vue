@@ -11,6 +11,7 @@
             around the world, ensuring that every sip embodies the essence of
             quality and freshness
           </p>
+          <button>Learn More</button>
         </div>
         <div class="col">
           <img src="https://i.postimg.cc/5tK3t8RP/about-1.png" />
@@ -31,6 +32,7 @@
             set new standards in the industry by continually pushing boundaries,
             exploring flavors, and embracing sustainability.
           </p>
+          <button>Learn More</button>
         </div>
       </div>
     </div>

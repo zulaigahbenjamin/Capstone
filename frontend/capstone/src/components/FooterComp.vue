@@ -15,7 +15,7 @@
                loading="lazy" />
         </div>
 
-        <p class="text-center">Homless animal shelter The budgetary unit of the Capital City of Warsaw</p>
+        <p class="text-center">Urban Bean Bistro is the local home of the most profound international beans that are shipped from all around the world</p>
 
         <ul class="list-unstyled d-flex flex-row justify-content-center">
           <li>
@@ -36,57 +36,27 @@
         </ul>
 
       </div>
-      <!--Grid column-->
+
 
       <!--Grid column-->
       <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
-        <h5 class="text-uppercase mb-4">Animals</h5>
+        <h5 class="text-uppercase mb-4">Quick Links</h5>
 
         <ul class="list-unstyled">
           <li class="mb-2">
-            <a href="#!" >When your pet is missing</a>
+            <a href="#!" ><router-link to="/products"></router-link>Shop Our Collections</a>
           </li>
           <li class="mb-2">
-            <a href="#!" >Recently found</a>
+            <a href="#!" >About Urban Bean Bistro</a>
           </li>
           <li class="mb-2">
-            <a href="#!" >How to adopt?</a>
+            <a href="#!" >Whats in your cart</a>
           </li>
           <li class="mb-2">
-            <a href="#!" >Pets for adoption</a>
+            <a href="#!">Login or Register</a>
           </li>
           <li class="mb-2">
-            <a href="#!" >Material gifts</a>
-          </li>
-          <li class="mb-2">
-            <a href="#!" >Help with walks</a>
-          </li>
-          <li class="mb-2">
-            <a href="#!" >Volunteer activities</a>
-          </li>
-        </ul>
-      </div>
-      <!--Grid column-->
-
-      <!--Grid column-->
-      <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
-        <h5 class="text-uppercase mb-4">Animals</h5>
-
-        <ul class="list-unstyled">
-          <li class="mb-2">
-            <a href="#!" >General information</a>
-          </li>
-          <li class="mb-2">
-            <a href="#!" >About the shelter</a>
-          </li>
-          <li class="mb-2">
-            <a href="#!" >Statistic data</a>
-          </li>
-          <li class="mb-2">
-            <a href="#!">Job</a>
-          </li>
-          <li class="mb-2">
-            <a href="#!">Tenders</a>
+            <a href="#!">Cheack Our Insider Notes</a>
           </li>
           <li class="mb-2">
             <a href="#!">Contact</a>
@@ -101,13 +71,13 @@
 
         <ul class="list-unstyled">
           <li>
-            <p><i class="fas fa-map-marker-alt pe-2"></i>Warsaw, 57 Street, Poland</p>
+            <p><i class="fas fa-map-marker-alt pe-2"></i>Wentworth, Durban</p>
           </li>
           <li>
-            <p><i class="fas fa-phone pe-2"></i>+ 01 234 567 89</p>
+            <p><i class="fas fa-phone pe-2"></i>+27 567 8911</p>
           </li>
           <li>
-            <p><i class="fas fa-envelope pe-2 mb-0"></i>contact@example.com</p>
+            <p><i class="fas fa-envelope pe-2 mb-0"></i>urbanbeanbistro@gmail.com</p>
           </li>
         </ul>
       </div>
@@ -119,7 +89,7 @@
 
   <!-- Copyright -->
   <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
-    © 2020 Copyright:
+    © 2023 Copyright:
     <a class="text-white" href="https://mdbootstrap.com/">Zulaigah Benjamin</a>
   </div>
   <!-- Copyright -->
