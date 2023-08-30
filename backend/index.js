@@ -10,7 +10,7 @@ import { errorHandeling } from "./middleware/errorHandeling.js";
 
 
 const corsOptions = {
-    origin: 'http://localhost:5002', // Replace with the actual client application's origin
+    origin: 'http://localhost:5000', // Replace with the actual client application's origin
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
     optionsSuccessStatus: 204,
@@ -156,4 +156,4 @@ app.delete("/users/:id", (req, res) => {
 });
 
 // Start the server after connecting to the database
-app.listen(5002, () => console.log("Server running at http://localhost:5002"));
+app.listen(5000, () => console.log("Server running at http://localhost:5000"));
