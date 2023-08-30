@@ -1,10 +1,10 @@
 
 // import connection
-import pool from "../config/config.js";
+import db from "../config/config.js";
   
 // Get All Products
 export const getUsers = (result) => {
-    pool.query("SELECT * FROM Users;", (err, results) => {             
+    db.query("SELECT * FROM Users;", (err, results) => {             
         if (err) {
             console.log(err);
             result(err, null);
@@ -16,7 +16,7 @@ export const getUsers = (result) => {
   
 // Get Single Product by ID
 export const getUsersById = (id, result) => {
-    pool.query("SELECT * FROM products WHERE id = ?", [id], (err, results) => {             
+    db.query("SELECT * FROM products WHERE id = ?", [id], (err, results) => {             
         if (err) {
             console.log(err);
             result(err, null);
@@ -33,7 +33,7 @@ export const getUsersById = (id, result) => {
 // Insert Product to Database
 export const insertUser = async (data) => {
     return new Promise((resolve, reject) => {
-        pool.query("INSERT INTO Users SET ?", [data], (err, results) => {             
+        db.query("INSERT INTO Users SET ?", [data], (err, results) => {             
             if (err) {
                 console.log(err);
                 reject(err);
@@ -47,7 +47,7 @@ export const insertUser = async (data) => {
   
 // Update Product in Database by ID
 export const updateUserById = (data, id, result) => {
-    pool.query("UPDATE Users SET firstName = ?,  lastName = ? WHERE userID = ?", [data.firstName, data.lastName, id], (err, results) => {             
+    db.query("UPDATE Users SET firstName = ?,  lastName = ? WHERE userID = ?", [data.firstName, data.lastName, id], (err, results) => {             
         if (err) {
             console.log(err);
             result(err, null);
@@ -63,7 +63,7 @@ export const updateUserById = (data, id, result) => {
   
 // Delete Product from Database by ID
 export const deleteUserById = (id, result) => {
-    pool.query("DELETE FROM Users WHERE id = ?", [id], (err, results) => {             
+    db.query("DELETE FROM Users WHERE id = ?", [id], (err, results) => {             
         if (err) {
             console.log(err);
             result(err, null);

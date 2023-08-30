@@ -40,9 +40,9 @@ export const createProduct = (req, res) => {
   
 // Update Product
 export const updateProduct = (req, res) => {
-    // const data  = req.body;
+    const data  = req.body;
     const id    = req.params.id;
-    updateProductById( id, (err, results) => {
+    updateProductById(data, id, (err, results) => {
         if (err){
             res.send(err);
         }else{
