@@ -4,7 +4,7 @@ import bodyParser from "body-parser";
 import Router from "./routes/router.js";
 import path from "path";
 import { fileURLToPath } from "url";
-import db from "../backend/config/config.js";
+import pool from "../backend/config/config.js";
 import { dirname } from "path";
 import { errorHandeling } from "./middleware/errorHandeling.js";
 
@@ -61,7 +61,7 @@ app.post("/addProduct", (req, res) => {
     "INSERT INTO products ( prodId, prodUrl, prodName, quantity,category, amount) VALUES (?, ?,?,?,?,?)";
   const values = [productName, productDescription, productPrice];
 
-  db.query(sql, values, (err, result) => {
+  pool.query(sql, values, (err, result) => {
     if (err) {
       console.error("Error adding product:", err);
       res
@@ -81,7 +81,7 @@ app.delete("/products/:id", (req, res) => {
 
   const sql = "DELETE FROM products WHERE prodId = ?";
 
-  db.query(sql, [productId], (error, result) => {
+  pool.query(sql, [productId], (error, result) => {
     if (error) {
       console.error("Error deleting product:", error);
       res.status(500).send("Error deleting product");
@@ -124,7 +124,7 @@ app.post("/addUsers", (req, res) => {
     userProfile,
   ];
 
-  db.query(sql, values, (err, result) => {
+  pool.query(sql, values, (err, result) => {
     if (err) {
       console.error("Error adding users:", err);
       res

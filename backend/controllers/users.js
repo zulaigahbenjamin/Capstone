@@ -69,7 +69,7 @@ export const deleteUser = (req, res) => {
     });
 }
 
-// db.connect(function(err) {
+// pool.connect(function(err) {
 //     if (err) throw err;
 //     var sql = "DELETE FROM products WHERE id = ?";
 //     con.query(sql, function (err, result) {

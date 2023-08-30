@@ -4,7 +4,7 @@ dotenv.config();
 
 // create the connection to database
 
-const db = mysql2.createConnection({
+const pool = mysql2.createConnection({
         host     : process.env.host,
         database : process.env.database,
         user     : process.env.user,
@@ -13,7 +13,7 @@ const db = mysql2.createConnection({
   connectionLimit:30,
 });
 
-db.connect((err) => {
+pool.connect((err) => {
     if (err) {
       console.error('Error connecting to MySQL:', err);
       return;
@@ -21,4 +21,4 @@ db.connect((err) => {
     console.log('Connected to MySQL server');
   });
 
-export default db;
+export default pool;
