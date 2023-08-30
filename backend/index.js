@@ -18,7 +18,7 @@ const corsOptions = {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const app = express(); // Create the 'app' instance first
-const port = +process.env.PORT || 5002;
+const port = +process.env.dbPORT || 5002;
 
 // Set up middleware and routes
 app.use(cors(corsOptions));
