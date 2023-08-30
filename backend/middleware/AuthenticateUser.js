@@ -1,10 +1,6 @@
 const {sign, verify} = require('jsonwebtoken')
 require("dotenv").config()
 
-
-
-
-
 import jwt from 'jsonwebtoken';
 
 const payload = { userId: 123 };
