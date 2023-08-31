@@ -29,10 +29,10 @@ export const getProductById = (id, result) => {
     });
 }
 
-// Insert Product to payloadbase
-export const insertProduct = async (payload) => {
+// Insert Product to Database
+export const insertProduct = async (data) => {
     return new Promise((resolve, reject) => {
-        db.query("INSERT INTO products SET ?", [payload], (err, results) => {
+        db.query("INSERT INTO products SET ?", [data], (err, results) => {
             if (err) {
                 console.log(err);
                 reject(err);
@@ -44,9 +44,9 @@ export const insertProduct = async (payload) => {
 }
 
 
-// Update Product in payloadbase by ID
-export const updateProductById = (payload, id, result) => {
-    db.query("UPDATE products SET prodName = ?, amount = ? WHERE prodId = ?", [payload.prodName,payload.amount, id], (err, results) => {
+// Update Product in Database by ID
+export const updateProductById = (data, id, result) => {
+    db.query("UPDATE products SET prodName = ?, amount = ? WHERE prodId = ?", [data.prodName,data.amount, id], (err, results) => {
             if (err) {
                 console.log(err);
                 result(err, null);
@@ -62,7 +62,7 @@ export const updateProductById = (payload, id, result) => {
         });
 }
 
-// Delete Product from payloadbase by ID
+// Delete Product from Database by ID
 export const deleteProductById = (id, result) => {
     db.query("DELETE FROM products WHERE prodId = ?", [id], (err, results) => {
         if (err) {

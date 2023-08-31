@@ -6,9 +6,9 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import db from './config/config.js';
 import { dirname } from 'path';
-import { errorHandeling } from "./middleware/errorHandeling.js";
+import { errorHandeling } from "../backend/middleware/errorHandeling.js";
 
-const allowedOrigins = ['*'];
+const allowedOrigins = ['http://localhost:5002', 'http://localhost:8080'];
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -46,15 +46,9 @@ app.use(express.static(path.join(__dirname, 'static')));
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'static', 'html', 'index.html'));
 });
-// app.use(cors({
-//   origin: function (origin, callback) {
-//     if (allowedOrigins.includes(origin)) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error('Not allowed by CORS'));
-//     }
-//   }
-// }));
+app.use(cors({
+  origin: allowedOrigins,
+}));
 
 app.get('/home', (req, res) => {
   res.json({
@@ -64,10 +58,7 @@ app.get('/home', (req, res) => {
 });
 
 
-app.get('/users', (req, res) => {
-  const users = new users();
-  users.fetchUsers(req, res); // Pass the req and res objects
-});
+
 
 app.post('/products', (req, res) => {
   const newProduct = req.body;
@@ -76,7 +67,7 @@ app.post('/products', (req, res) => {
 });
 app.post('/addProduct', (req, res) => {
   const { productName, productSize, productDescription, productPrice } = req.body;
-  const sql = 'INSERT INTO products ( prodID, prodUrl, prodName, quantity,size,category, amount) VALUES (?, ?, ?, ?,?,?,?)';
+  const sql = 'INSERT INTO products ( prodId, prodUrl, prodName, quantity,category, amount) VALUES (?, ?, ?, ?,?,?,?)';
   const values = [productName, productSize, productDescription, productPrice];
 
   db.query(sql, values, (err, result) => {
@@ -92,7 +83,7 @@ app.post('/addProduct', (req, res) => {
 app.delete('/products/:id', (req, res) => {
   const productId = req.params.id;
 
-  const sql = 'DELETE FROM products WHERE prodID = ?';
+  const sql = 'DELETE FROM products WHERE prodId = ?';
 
   db.query(sql, [productId], (error, result) => {
     if (error) {
@@ -107,62 +98,7 @@ app.delete('/products/:id', (req, res) => {
 
 
 
-///users
-app.post('/users', (req, res) => {
-  const newUser = req.body;
-  user.push(newUser);
-  res.status(201).json(newUsers);
-});
-app.post('/addUsers', (req, res) => {
-  const {
-    userID,
-    firstName,
-    lastName,
-    userAge,
-    Gender,
-    userRole,
-    emailAdd,
-    emailPass,
-    userProfile
-  } = req.body;
-  const sql = 'INSERT INTO Users (firstName, lastName, userAge) VALUES (?, ?, ?, ?)';
-  const values = [
-    userID,
-    firstName,
-    lastName,
-    userAge,
-    Gender,
-    userRole,
-    emailAdd,
-    emailPass,
-    userProfile
-  ];
 
-  db.query(sql, values, (err, result) => {
-    if (err) {
-      console.error('Error adding users:', err);
-      res.status(500).json({ error: 'An error occurred while adding the product' });
-    } else {
-      res.json({ message: 'Users added successfully', userId: result.insertId });
-    }
-  });
-});
-
-app.delete('/users/:id', (req, res) => {
-  const UserId = req.params.id;
-
-  const sql = 'DELETE FROM Users WHERE id = ?';
-
-  connection.query(sql, [UserId], (error, result) => {
-    if (error) {
-      console.error('Error deleting user:', error);
-      res.status(500).send('Error deleting product');
-    } else {
-      console.log('Users deleted');
-      res.status(200).send('Users deleted successfully');
-    }
-  });
-});
 
 
 // Start the server after connecting to the database

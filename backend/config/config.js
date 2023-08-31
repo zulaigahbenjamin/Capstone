@@ -6,7 +6,7 @@ dotenv.config();
 // create the connection to the database
 const db = mysql2.createPool({
   host: process.env.host,
-  database: process.env.database, // Change this line to use the correct configuration option
+  database: process.env.database, 
   user: process.env.user,
   password: process.env.password,
   multipleStatements: true,
@@ -19,7 +19,7 @@ db.getConnection((err, connection) => {
     return;
   }
   console.log('Connected to MySQL database.');
-  connection.release(); // Release the connection
+  connection.release(); 
 });
 
 export default db;

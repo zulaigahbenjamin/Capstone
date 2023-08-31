@@ -28,8 +28,8 @@ export const showProductById = (req, res) => {
   
 // Create New Product
 export const createProduct = (req, res) => {
-    const payload = req.body;
-    insertProduct(payload, (err, results) => {
+    const data = req.body;
+    insertProduct(data, (err, results) => {
         if (err){
             res.send(err);
         }else{
@@ -40,9 +40,9 @@ export const createProduct = (req, res) => {
   
 // Update Product
 export const updateProduct = (req, res) => {
-    const payload  = req.body;
+    const data  = req.body;
     const id    = req.params.id;
-    updateProductById(payload, id, (err, results) => {
+    updateProductById(data, id, (err, results) => {
         if (err){
             res.send(err);
         }else{
