@@ -8,7 +8,7 @@ import db from './config/config.js';
 import { dirname } from 'path';
 import { errorHandeling } from "./middleware/errorHandeling.js";
 
-const allowedOrigins = ['http://localhost:8080/', 'http://localhost:5002'];
+const allowedOrigins = ['*'];
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -46,15 +46,15 @@ app.use(express.static(path.join(__dirname, 'static')));
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'static', 'html', 'index.html'));
 });
-app.use(cors({
-  origin: function (origin, callback) {
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  }
-}));
+// app.use(cors({
+//   origin: function (origin, callback) {
+//     if (allowedOrigins.includes(origin)) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error('Not allowed by CORS'));
+//     }
+//   }
+// }));
 
 app.get('/home', (req, res) => {
   res.json({

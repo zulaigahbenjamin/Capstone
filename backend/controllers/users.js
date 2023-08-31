@@ -34,8 +34,8 @@ export const showUserById = (req, res) => {
   
 // Create New Product
 export const createUser  = (req, res) => {
-    const data = req.body;
-    insertUser(data, (err, results) => {
+    const payload = req.body;
+    insertUser(payload, (err, results) => {
         if (err){
             res.send(err);
         }else{
@@ -46,9 +46,9 @@ export const createUser  = (req, res) => {
   
 // Update Product
 export const updateUser = (req, res) => {
-    const data  = req.body;
+    const payload  = req.body;
     const id    = req.params.id;
-    updateUserById(data, id, (err, results) => {
+    updateUserById(payload, id, (err, results) => {
         if (err){
             res.send(err);
         }else{

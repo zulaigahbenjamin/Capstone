@@ -30,10 +30,10 @@ export const getUsersById = (id, result) => {
     });   
 }
   
-// Insert Product to Database
-export const insertUser = async (data) => {
+// Insert Product to payloadbase
+export const insertUser = async (payload) => {
     return new Promise((resolve, reject) => {
-        db.query("INSERT INTO Users SET ?", [data], (err, results) => {             
+        db.query("INSERT INTO Users SET ?", [payload], (err, results) => {             
             if (err) {
                 console.log(err);
                 reject(err);
@@ -45,9 +45,9 @@ export const insertUser = async (data) => {
 }
 
   
-// Update Product in Database by ID
-export const updateUserById = (data, id, result) => {
-    db.query("UPDATE Users SET firstName = ?,  lastName = ? WHERE userID = ?", [data.firstName, data.lastName, id], (err, results) => {             
+// Update Product in payloadbase by ID
+export const updateUserById = (payload, id, result) => {
+    db.query("UPDATE Users SET firstName = ?,  lastName = ? WHERE userID = ?", [payload.firstName, payload.lastName, id], (err, results) => {             
         if (err) {
             console.log(err);
             result(err, null);
@@ -61,7 +61,7 @@ export const updateUserById = (data, id, result) => {
     });   
 }
   
-// Delete Product from Database by ID
+// Delete Product from payloadbase by ID
 export const deleteUserById = (id, result) => {
     db.query("DELETE FROM Users WHERE id = ?", [id], (err, results) => {             
         if (err) {
