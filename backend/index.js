@@ -8,7 +8,7 @@ import db from './config/config.js';
 import { dirname } from 'path';
 import { errorHandeling } from "./middleware/errorHandeling.js";
 
-const allowedOrigins = ['http://localhost:8080', 'http://localhost:8081'];
+const allowedOrigins = ['http://localhost:8080/', 'http://localhost:5002'];
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
