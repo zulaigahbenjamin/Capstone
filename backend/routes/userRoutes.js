@@ -1,21 +1,42 @@
-// models/user.js
+import express from 'express';
+import { check, validationResult } from 'express-validator';
+import userController from '../controllers/users.js';
 
-// const pool = require("../config/config.js")
-import pool from '../config/config.js'
+const router = express.Router();
 
-const User = {
-  createUser(firstName, lastName, emailAddress, pwd) {
-    return pool.execute(
-      "INSERT INTO Users (firstName, lastName, emailAddress, pwd) VALUES (?, ?, ?, ?)",
-      [firstName, lastName, emailAddress, pwd]
-    )
-    .then(([result]) => result.insertId);
-  },
-
-  getAllUsers() {
-    return pool.query("SELECT * FROM Users")
-      .then(([users]) => users);
-  },
-  // ... more functions
+// Validation middleware
+const validate = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  }
+  next();
 };
-export default User;
+
+router.post(
+  '/register',
+  [
+    check('firstName').notEmpty().withMessage('First name is required'),
+    check('lastName').notEmpty().withMessage('Last name is required'),
+    check('emailAdress').isEmail().withMessage('Enter a valid email'), // Should be 'emailAddress'
+    check('Pwd')
+      .isLength({ min: 4 })
+      .withMessage('Password must be at least 6 characters long'), // Should be 'pwd'
+  ],
+  validate,
+  userController.register
+);
+
+router.post(
+  '/login',
+  [
+    check('emailAddress').isEmail().withMessage('Enter a valid email'),
+    check('pwd').exists().withMessage('Password is required'), // Fixed field name
+  ],
+  validate,
+  userController.login
+);
+
+router.get('/', userController.getAllUsers); // This is just for testing and should be removed in production!
+
+export default router;

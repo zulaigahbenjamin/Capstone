@@ -12,7 +12,7 @@ const db = createPool({
   password: process.env.password,
   port: 3306,
   multipleStatements: true,
-  connectionLimit: 30,
+  connectionLimit: 50,
 });
 
 db.getConnection((err, connection) => {

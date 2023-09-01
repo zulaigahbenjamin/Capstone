@@ -2,10 +2,10 @@
 
 import pool from "../config/config.js"
 
-export const createUser = (firstName, lastName, emailAddress, pwd, result) => {
+export const createUser = (firstName, lastName, emailAddress, Pwd, result) => {
   pool.execute(
-    "INSERT INTO Users (firstName, lastName, emailAddress, pwd) VALUES (?, ?, ?, ?)",
-    [firstName, lastName, emailAddress, pwd],
+    "INSERT INTO Users (firstName, lastName, emailAddress, Pwd) VALUES (?, ?, ?, ?)",
+    [firstName, lastName, emailAddress, Pwd],
     (error, dbResult) => {
       if (error) {
         console.error("Error creating user:", error);

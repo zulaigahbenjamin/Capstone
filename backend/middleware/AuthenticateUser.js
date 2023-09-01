@@ -1,22 +1,19 @@
-const {sign, verify} = require('jsonwebtoken')
-require("dotenv").config()
-
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
-const payload = { userId: 123 };
-const secretKey = 'zulaigah';
+dotenv.config();
 
-const token = jwt.sign(payload, secretKey);
-function createToken(user) {
-    return sign({
-        emailAdd: user.emailAdd,
-        userPass: user.userPass
-    },
-    process.env.SECRET_KEY,
-    {
-        expiresIn: '3h'
-    })
+export function createToken(user) {
+    return jwt.sign(
+        {
+            emailAdd: user.emailAdd,
+            userPass: user.userPass
+        },
+        process.env.SECRET_KEY,
+        {
+            expiresIn: '3h'
+        }
+    );
 }
-module.exports = {
-    createToken
-}
+
+export default createToken;
