@@ -80,6 +80,8 @@ app.post('/addProduct', (req, res) => {
   });
 });
 
+
+
 app.delete('/products/:id', (req, res) => {
   const productId = req.params.id;
 

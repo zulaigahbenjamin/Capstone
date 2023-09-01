@@ -1,27 +1,35 @@
-import pool from "../config/config.js";
+// models/user.js
 
-const User = {
-  async createUser(firstName, lastName, email, password) {
-    try {
-      const [result] = await pool.execute(
-        "INSERT INTO Users (firstName, lastName, email, pwd) VALUES (?, ?, ?, ?)",
-        [firstName, lastName, email, password]
-      );
-      return result.insertId;
-    } catch (error) {
-      throw error;
-    }
-  },
+import pool from "../config/config.js"
 
-  async getAllUsers() {
-    try {
-      const [users] = await pool.query("SELECT * FROM Users");
-      return users;
-    } catch (error) {
-      throw error;
+export const createUser = (firstName, lastName, emailAddress, pwd, result) => {
+  pool.execute(
+    "INSERT INTO Users (firstName, lastName, emailAddress, pwd) VALUES (?, ?, ?, ?)",
+    [firstName, lastName, emailAddress, pwd],
+    (error, dbResult) => {
+      if (error) {
+        console.error("Error creating user:", error);
+        result(error, null);
+      } else {
+        result(null, { insertId: dbResult.insertId });
+      }
     }
-  },
-  // ... more functions
+  );
 };
+
+
+
+export const getAllUsers = (result) => {
+  pool.query("SELECT * FROM Users", (error, users) => {
+    if (error) {
+      console.error("Error getting all users:", error);
+      result(error, null);
+    } else {
+      result(null, users);
+    }
+  });
+};
+  // ... more functions
+
 
 export default User;
