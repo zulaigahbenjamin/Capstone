@@ -8,6 +8,7 @@ const db = createPool({
   host: process.env.host,
   database: process.env.database, 
   user: process.env.user,
+  port: process.env.port,
   password: process.env.password,
   port: 3306,
   multipleStatements: true,
