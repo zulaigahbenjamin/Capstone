@@ -1,103 +1,151 @@
+// Import function from Product Model
+// import User from "../models/user.js";
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import db from '../config/config.js';
-import {createToken} from '../middleware/AuthenticateUser.js'
+import tokenCreated from '../middleware/AuthenticateUser.js';
 
-const userController = {
-  async register(req, res) {
-    try {
-      const data = req.body;
-      const { firstName, lastName, emailAddress, Pwd } = data; // Use 'Pwd' to match your table structure
+
+// const user = new User();
+import { getUsers, getUsersById, insertUser, updateUserById, deleteUserById, getUserByEmail} from "../models/userModal.js";
+
   
-      if (!Pwd) {
-        return res.status(400).json({ message: 'Password is required' });
-      }
-  
-      const hashedPwd = await bcrypt.hash(Pwd, 10); // Use 'Pwd' for hashing
-  
-      const query = db.execute(
-        "INSERT INTO Users (firstName, lastName, emailAddress, Pwd) VALUES (?, ?, ?, ?)",
-        [firstName, lastName, emailAddress, hashedPwd]
-      );
-  
-      console.log(query);
-      const token = createToken(data); // Pass 'data' to createToken
-  
-      return res.status(201).json({
-        user: {
-         
-          firstName: firstName,
-          lastName: lastName,
-          emailAddress: emailAddress,
-        },
-        token,
-      });
-    } catch (error) {
-      if (error.code === "ER_DUP_ENTRY") {
-        return res
-          .status(400)
-          .json({ message: "This email Address is already registered." });
-      }
-      console.error("Error detail:", error); // Log the error details
-      return res.status(500).json({ message: "Error registering user." });
-    }
-  },
-  
-
-
-
-
-
-  async getAllUsers(req, res) {
-    try {
-      const [users] = pool.query("SELECT * FROM Users");
-      return res.status(200).json(users);
-    } catch (error) {
-      console.error("Error detail:", error); // Log the error details
-      return res.status(500).json({ message: "Error fetching users." });
-    }
-  },
-
-  async login(req, res) {
-    try {
-      const { emailAddress, Pwd } = req.body;
-
-      // Check if user exists
-      const [users] = pool.execute(
-        "SELECT * FROM Users WHERE emailAddress = ?",
-        [emailAddress]
-      );
-      const user = users[0];
-
-      if (!user) {
-        return res.status(400).json({ message: "Invalid email or password." });
-      }
-
-      // Compare passwords
-      const isMatch = await bcrypt.compare(Pwd, user.Pwd);
-
-      if (!isMatch) {
-        return res.status(400).json({ message: "Invalid email or password." });
-      }
-
-      // Generate JWT
-      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-        expiresIn: "1h",
-      });
-
-      return res.json({
-        user: {
-          id: user.id,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.emailAddress,
-        },
-        token,
-      });
-    } catch (error) {
-      return res.status(500).json({ message: "Error logging in user." });
-    }
-  },
+// Get All Products
+export const showUsers = (req, res) => {
+    getUsers
+    ((err, results) => {
+        if (err){
+            res.send(err);
+        }else{
+            res.json({
+                status: res.statusCode, 
+                results
+            });
+        }
+    });
 };
 
-export default userController;
+export const registerUser = (req, res) => {
+  const data = req.body;
+
+  // Hash the user's password
+  bcrypt.hash(data.Pwd, 15, (err, hashedPassword) => {
+    if (err) {
+      res.status(500).json({ error: 'Error hashing password' });
+    } else {
+      // Payload for token
+      const user = {
+        emailAddress: data.emailAddress,
+        Pwd: hashedPassword, // Use hashedPassword here, not hashedPwd
+      };
+
+      // Create a token (assuming you have a function named tokenCreated)
+      const token = tokenCreated(user);
+
+      // Assuming you have a function to insert the user into your database
+      // Insert the user with hashed password into the database
+      insertUser({ ...data, Pwd: hashedPassword }, (dbErr, dbResults) => {
+        if (dbErr) {
+          res.status(500).json({ error: 'Error registering user' });
+        } else {
+          res.json({
+            status: res.statusCode,
+            msg: 'You are now registered.',
+            token: token,
+          });
+        }
+      });
+    }
+  });
+}; 
+
+//login 
+export const loginUser = (req, res) => {
+  const { emailAddress, password } = req.body;
+
+  // Retrieve the user from the database by their email address
+  // Replace this with your actual database retrieval code
+  getUserByEmail(emailAddress, (dbErr, user) => {
+    if (dbErr) {
+      res.status(500).json({ error: 'Error retrieving user' });
+    } else if (!user) {
+      res.status(404).json({ error: 'User not found' });
+    } else {
+      // Compare the provided password with the hashed password in the database
+      bcrypt.compare(password, user.Pwd, (compareErr, isMatch) => {
+        if (compareErr) {
+          res.status(500).json({ error: 'Error comparing passwords' });
+        } else if (!isMatch) {
+          res.status(401).json({ error: 'Incorrect password' });
+        } else {
+          // Passwords match; you can generate a token for the user here if needed
+          // Replace this with your actual token generation code
+          const token = generateToken(user);
+
+          res.json({
+            status: res.statusCode,
+            msg: 'Login successful',
+            token: token,
+          });
+        }
+      });
+    }
+  });
+};
+
+// Get Single Product 
+export const showUserById = (req, res) => {
+    getUsersById(req.params.id, (err, results) => {
+        if (err){
+            res.send(err);
+        }else{
+            res.json(results);
+        }
+    });
+}
+  
+// Create New Product
+export const createUser  = (req, res) => {
+    const data = req.body;
+    insertUser(data, (err, results) => {
+        if (err){
+            res.send(err);
+        }else{
+            res.json(results);
+        }
+    });
+}
+  
+// Update Product
+export const updateUser = (req, res) => {
+    const data  = req.body;
+    const id    = req.params.id;
+    updateUserById(data, id, (err, results) => {
+        if (err){
+            res.send(err);
+        }else{
+            res.json(results);
+        }
+    });
+}
+  
+
+export const deleteUser = (req, res) => {
+    const id = req.params.id;
+    deleteUserById(id, (err, results) => {
+        if (err){
+            res.send(err);
+        }else{
+            res.json(results);
+        }
+    });
+}
+
+// db.connect(function(err) {
+//     if (err) throw err;
+//     var sql = "DELETE FROM products WHERE id = ?";
+//     con.query(sql, function (err, result) {
+//       if (err) throw err;
+//       console.log("Number of records deleted: " + result.affectedRows);
+//     });
+// });
+
+export default getUserByEmail;

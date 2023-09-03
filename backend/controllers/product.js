@@ -63,4 +63,3 @@ export const deleteProduct = (req, res) => {
     });
 }
 
-

@@ -1,5 +1,7 @@
 import {createPool} from "mysql2";
 import dotenv from 'dotenv';
+// const {createPool} = require("mysql2");
+// const dotenv = require('dotenv')
 
 dotenv.config();
 
@@ -23,8 +25,6 @@ db.getConnection((err, connection) => {
   console.log('Connected to MySQL database.');
   connection.release(); 
 });
-db.on('error', (err) => {
-  console.error('MySQL Connection Error:', err);
-});
+
 
 export default db;

@@ -1,23 +1,14 @@
 import cors from "cors";
 import express from "express";
 import bodyParser from "body-parser";
-import Router from "./routes/router.js";
+import Router from "./routes/route.js";
 import path from 'path';
 import { fileURLToPath } from 'url';
 import db from './config/config.js';
-import { check } from 'express-validator';
-import { validationResult } from 'express-validator';
-import userController from './controllers/users.js';
-
-
 import { dirname } from 'path';
-import { errorHandeling } from "../backend/middleware/errorHandeling.js";
+import { errorHandeling } from "./middleware/errorHandeling.js";
 
-import userRoutes from '../backend/routes/userRoutes.js'
-
-
-
-const allowedOrigins = ['http://localhost:5002', 'http://localhost:8080'];
+const allowedOrigins = ['http://localhost:5002', 'http://localhost:8081'];
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -41,24 +32,29 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(cors(corsOptions));
+
 // Set up middleware and routes
 app.use(errorHandeling);
 app.use(express.json());
-app.use(cors(corsOptions));
-app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(Router);
 app.use(express.static(path.join(__dirname, 'static')));
-app.use("/api/users", userRoutes)
 
 // Define your routes
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'static', 'html', 'index.html'));
 });
-app.use(cors({
-  origin: allowedOrigins,
-}));
+// app.use(cors({
+//   origin: function (origin, callback) {
+//     if (allowedOrigins.includes(origin)) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error('Not allowed by CORS'));
+//     }
+//   }
+// }));
 
 app.get('/home', (req, res) => {
   res.json({
@@ -68,19 +64,20 @@ app.get('/home', (req, res) => {
 });
 
 
-
+app.get('/users', (req, res) => {
+  const users = new users();
+  users.fetchUsers(req, res); // Pass the req and res objects
+});
 
 app.post('/products', (req, res) => {
   const newProduct = req.body;
   products.push(newProduct);
   res.status(201).json(newProduct);
 });
-
-
 app.post('/addProduct', (req, res) => {
   const { productName, productSize, productDescription, productPrice } = req.body;
   const sql = 'INSERT INTO products ( prodId, prodUrl, prodName, quantity,category, amount) VALUES (?, ?, ?, ?,?,?,?)';
-  const values = [productName, productSize, productDescription, productPrice];
+  const values = [productName,productDescription, productPrice];
 
   db.query(sql, values, (err, result) => {
     if (err) {
@@ -92,12 +89,10 @@ app.post('/addProduct', (req, res) => {
   });
 });
 
-
-
 app.delete('/products/:id', (req, res) => {
   const productId = req.params.id;
 
-  const sql = 'DELETE FROM products WHERE prodId = ?';
+  const sql = 'DELETE FROM products WHERE prodID = ?';
 
   db.query(sql, [productId], (error, result) => {
     if (error) {
@@ -111,45 +106,55 @@ app.delete('/products/:id', (req, res) => {
 });
 
 
-app.post(
-  '/register',
-  [
-    check('firstName').notEmpty().withMessage('First name is required'),
-    check('lastName').notEmpty().withMessage('Last name is required'),
-    check('emailAddress').isEmail().withMessage('Enter a valid email'),
-    check('Pwd')
-      .isLength({ min: 6 })
-      .withMessage('Password must be at least 6 characters long'),
-  ],
-  (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() });
+
+///users
+app.post('/users', (req, res) => {
+  const newUser = req.body;
+  user.push(newUser);
+  res.status(201).json(newUsers);
+});
+app.post('/addUsers', (req, res) => {
+  const {
+    userId,
+    firstName,
+    lastName,
+    emailAddress,
+    Pwd,
+  } = req.body;
+  const sql = 'INSERT INTO Users (firstName, lastName) VALUES (?, ?, ?, ?)';
+  const values = [
+    userId,
+    firstName,
+    lastName,
+    emailAddress,
+    Pwd,
+  ];
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error('Error adding users:', err);
+      res.status(500).json({ error: 'An error occurred while adding the product' });
+    } else {
+      res.json({ message: 'Users added successfully', userId: result.insertId });
     }
+  });
+});
 
-    // Call your userController.register function here
-    userController.register(req, res);
-  }
-);
+app.delete('/users/:id', (req, res) => {
+  const UserId = req.params.id;
 
-// Define the 'login' endpoint
-app.post(
-  '/login',
-  [
-    check('emailAddress').isEmail().withMessage('Enter a valid email'),
-    check('Pwd').exists().withMessage('Password is required'),
-  ],
-  (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() });
+  const sql = 'DELETE FROM Users WHERE id = ?';
+
+  connection.query(sql, [UserId], (error, result) => {
+    if (error) {
+      console.error('Error deleting user:', error);
+      res.status(500).send('Error deleting product');
+    } else {
+      console.log('Users deleted');
+      res.status(200).send('Users deleted successfully');
     }
-
-    // Call your userController.login function here
-    userController.login(req, res);
-  }
-);
-
+  });
+});
 
 
 // Start the server after connecting to the database
