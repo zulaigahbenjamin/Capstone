@@ -79,11 +79,11 @@ export const deleteUserById = (id, result) => {
 };
 
 export const getUserByEmail = (emailAddress, callback) => {
-    db.query('SELECT * FROM users WHERE emailAddress = ?', [emailAddress], (err, user) => {
+    db.query('SELECT * FROM users WHERE emailAddress = ?, Pwd = ?', [emailAddress, Pwd], (err, user) => {
       if (err) {
         callback(err, null);
       } else {
-        callback(null, user[0]); // Assuming a single user is found
+        callback(null, user[0]); 
       }
     });
   };

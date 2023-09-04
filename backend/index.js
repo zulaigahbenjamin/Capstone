@@ -66,7 +66,7 @@ app.get('/home', (req, res) => {
 
 app.get('/users', (req, res) => {
   const users = new users();
-  users.fetchUsers(req, res); // Pass the req and res objects
+  users.fetchUsers(req, res);
 });
 
 app.post('/products', (req, res) => {
@@ -111,7 +111,7 @@ app.delete('/products/:id', (req, res) => {
 app.post('/users', (req, res) => {
   const newUser = req.body;
   user.push(newUser);
-  res.status(201).json(newUsers);
+  res.status(201).json(newUser);
 });
 app.post('/addUsers', (req, res) => {
   const {
@@ -143,7 +143,7 @@ app.post('/addUsers', (req, res) => {
 app.delete('/users/:id', (req, res) => {
   const UserId = req.params.id;
 
-  const sql = 'DELETE FROM Users WHERE id = ?';
+  const sql = 'DELETE FROM Users WHERE userId = ?';
 
   connection.query(sql, [UserId], (error, result) => {
     if (error) {
@@ -154,6 +154,52 @@ app.delete('/users/:id', (req, res) => {
       res.status(200).send('Users deleted successfully');
     }
   });
+});
+
+app.post('/add_cart', (request, response) => {
+
+	const prodId = request.body.prodId;
+	const prodName = request.body.prodName;
+	const amount = request.body.amount;
+	let count = 0;
+	for(let i = 0; i < request.session.cart.length; i++)
+	{
+		if(request.session.cart[i].prodId === prodId)
+		{
+			request.session.cart[i].quantity += 1;
+			count++;
+		}
+	}
+	if(count === 0)
+	{
+		const cart_data = {
+			prodId : prodId,
+			prodName : prodName,
+			amount : parseFloat(amount),
+			quantity : 1
+		};
+
+		request.session.cart.push(cart_data);
+	}
+
+	response.redirect("/");
+
+});
+
+app.get('/remove_item', (request, response) => {
+
+	const prodId = request.query.id;
+
+	for(let i = 0; i < request.session.cart.length; i++)
+	{
+		if(request.session.cart[i].prodId === prodId)
+		{
+			request.session.cart.splice(i, 1);
+		}
+	}
+
+	response.redirect("/");
+
 });
 
 
