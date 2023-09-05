@@ -37,8 +37,24 @@
       </div>
     </div>
     <div>
-      <h1>FRESH ORGANIC BEANS</h1>
+      <h1>OUR MAIN TYPES OF COFFEE BEANS</h1>
     </div>
+    <div class="container"> 
+  <div class="row">
+    <div class="col">
+      <img src="https://i.postimg.cc/ncqqF0gJ/arabica-beans.jpg" >
+      <p>Arabica Beans </p>
+    </div>
+    <div class="col">
+      <img src="https://i.postimg.cc/PJ5ZSjKz/roasted-beans.webp">
+      <p>Lighlty Roasted Beans</p>
+    </div>
+    <div class="col">
+      <img src="https://i.postimg.cc/fTvj78Kv/lighlty-roasted.jpg">
+     <p> Robusta Beans/Roasted Beans</p>
+    </div>
+  </div>
+</div>
   </div>
 </template>
 
@@ -54,5 +70,11 @@ h1 {
 
 .about {
   padding-top: 50px;
+}
+button {
+  background-color: rgba(220, 164, 125, 1);
+  color: white;
+  text-decoration: none;
+  border: none;
 }
 </style>

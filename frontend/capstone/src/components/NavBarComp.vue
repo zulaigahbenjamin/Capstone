@@ -28,10 +28,10 @@
               <router-link to="/contact">Contact</router-link>
             </li>
             <li id="fade-in">
-              <router-link to="/cart">Cart</router-link>
+              <router-link to="/cart"><i class="fa-solid fa-cart-shopping fa-lg" style="color: #000000;"></i></router-link>
             </li>
             <li id="fade-in">
-              <router-link to="/login">Login</router-link>
+              <router-link to="/login"><i class="fa-regular fa-user fa-lg" style="color: #000000;"></i></router-link>
             </li>
           </ul>
         </div>
@@ -56,11 +56,6 @@ export default {};
 #fade-in {
   animation: fadeIn 3s;
 }
-
-/* .nav-logo {
-      width: 3rem;
-    } */
-
 nav {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
   padding: 25px !important;
