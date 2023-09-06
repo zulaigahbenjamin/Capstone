@@ -3,6 +3,7 @@
     <!-- Navbar -->
     <nav class="navbar sticky-top navbar-expand-lg">
       <div class="container-fluid">
+        <img src="https://i.postimg.cc/G2xSH4q0/Urban-Be-1.jpg" alt="" style="height:80px;">
         <button
           class="navbar-toggler"
           type="button"

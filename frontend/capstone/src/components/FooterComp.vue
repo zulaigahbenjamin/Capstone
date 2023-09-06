@@ -11,7 +11,7 @@
       <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
 
         <div class="rounded-circle bg-white shadow-1-strong d-flex align-items-center justify-content-center mb-4 mx-auto" style="width: 150px; height: 150px;">
-          <img src="" height="70" alt=""
+          <img src="https://i.postimg.cc/G2xSH4q0/Urban-Be-1.jpg" height="150" alt=""
                loading="lazy" />
         </div>
 

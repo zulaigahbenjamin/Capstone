@@ -4,20 +4,12 @@
     <div class="sort-filter-container">
       <div class="filter-container">
         <label for="filter">Filter by:</label>
-      
+
         <Products
           :products="filteredProducts"
           :filters="filters"
           @set-filters="filtersChanged"
-          :lastPage="lastPage"
         />
-      </div>
-      <div class="sort-container">
-        <label for="sort">Sort by:</label>
-        <select id="sort">
-          <option value="price-low">Price Low to High</option>
-          <option value="price-high">Price High to Low</option>
-        </select>
       </div>
     </div>
   </div>
@@ -25,7 +17,7 @@
 
 <script>
 import Products from "@/components/SortComp.vue";
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, ref } from "vue";
 
 export default {
   name: "Frontend",
@@ -33,13 +25,11 @@ export default {
   setup() {
     const allProducts = ref([]);
     const filteredProducts = ref([]);
-    const filters = reactive({
+    const filters = ref({
       s: "",
       sort: "",
       page: 1,
     });
-    const perPage = 9;
-    const lastPage = ref(0);
 
     onMounted(async () => {
       const response = await fetch(
@@ -49,11 +39,7 @@ export default {
 
       if (Array.isArray(responseData.results)) {
         allProducts.value = responseData.results;
-        filteredProducts.value = responseData.results.slice(
-          0,
-          filters.page * perPage
-        );
-        lastPage.value = Math.ceil(responseData.results.length / perPage);
+        filteredProducts.value = responseData.results;
       } else {
         console.error("The response content is not an array:", responseData);
       }
@@ -82,14 +68,12 @@ export default {
         products.sort((a, b) => b.amount - a.amount);
       }
 
-      lastPage.value = Math.ceil(products.length / perPage);
-      filteredProducts.value = products.slice(0, filters.page * perPage);
+      filteredProducts.value = products;
     };
 
     return {
       filteredProducts,
       filters,
-      lastPage,
       filtersChanged,
     };
   },
