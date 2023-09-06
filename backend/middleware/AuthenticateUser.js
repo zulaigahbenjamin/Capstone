@@ -3,8 +3,8 @@ require('dotenv').config()
 //Token creation
 function tokenCreated(user) {
     return sign({
-        UserEmail: user.UserEmail,
-        UserPass: user.UserPass
+        emailAdress: user.emailAdress,
+        userPwd: user.userPwd
     },process.env.SECRET_KEY,
     {
         expiresIn:'1h'

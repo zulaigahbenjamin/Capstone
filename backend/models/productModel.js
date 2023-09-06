@@ -4,21 +4,14 @@ class Products{
    getProducts = (req, res) => {
         const query =`SELECT * FROM products;`
         db.query(query, (err, results) => {
-            // if (err) {
-            //     console.log(err);
-            //     result(err, null);
-            // } else {
-            //     result
-            //     (null, results);
-            // }
-            if (err) throw err 
+            if (err) throw err
             res.json({
                 status: res.statusCode,
                 results
             })
-        });
+        })
     };
-    
+  
     getProduct(req,res){
         const query =`
         SELECT prodId, prodName,quantity, amount, category, prodUrl

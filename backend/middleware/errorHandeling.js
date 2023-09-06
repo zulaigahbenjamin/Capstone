@@ -1,4 +1,4 @@
-function errorHandling(err,req,res,next) {
+function errorHandling(err,res,next) {
     if(err){
         let status = err.status || 500
         res.json({
