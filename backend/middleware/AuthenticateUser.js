@@ -1,16 +1,34 @@
-import jwt from 'jsonwebtoken';
-
-const createToken = (user) => {
-  return jwt.sign(
+const {sign,verify} = require('jsonwebtoken')
+require('dotenv').config()
+//Token creation
+function tokenCreated(user) {
+    return sign({
+        UserEmail: user.UserEmail,
+        UserPass: user.UserPass
+    },process.env.SECRET_KEY,
     {
-      emailAddress: user.emailAddress,
-      Pwd: user.Pwd
-    },
-    process.env.SECRET_KEY,
-    {
-      expiresIn: '3h'
-    }
-  );
-};
+        expiresIn:'1h'
+    })
+}
+//Token verification
+function verifyToken(req,res,next) {
+    const token = req.headers["authorization"]
+    return verify(token,process.env.SECRET_KEY,(err,decoded)=>{
+        if (err) {
+            res.json({
+                msg: "Token authontication failed."
+            })
+        }
+        req.decoded =decoded
+        next();
+    })
+}
+module.exports = {
+    tokenCreated,
+    verifyToken
+}
 
-export default createToken;
+
+
+
+

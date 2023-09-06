@@ -1,11 +1,12 @@
-export function errorHandeling(err, req, res, next) {
-    if (err) {
-        const status = err.status || 501;
-
-        res.status(status).json({
-            status: status,
-            err: "An error has occurred, try again later"
-        });
+function errorHandling(err,req,res,next) {
+    if(err){
+        let status = err.status || 500
+        res.json({
+            status,
+            msg: "An error has occured, please try again later"
+        })
     }
-    next();
+    next()
 }
+
+module.exports = errorHandling

@@ -1,91 +1,127 @@
-
-// import connection
-import db from "../config/config.js";
-// import  bcrypt  from 'bcrypt';
-  
-// Get All Products
-export const getUsers = (result) => {
-    db.query("SELECT * FROM Users;", (err, results) => {             
-        if (err) {
-            console.log(err);
-            result(err, null);
-        } else {
-            result(null, results);
+const db = require('../config/config.js')
+const {hash,compare} = require('bcrypt')
+const {tokenCreated} = require('../middleware/AuthenticateUser.js')
+class Users{
+    getUsers(req,res){
+        const query =`
+        SELECT userId, firstName,lastName, emailAddress
+        FROM Users;
+        `
+        db.query(query,(err,results)=>{
+            if(err) throw err
+            res.json({
+                status:res.statusCode,
+                results
+            })
+        })
+    }
+    getUser(req,res){
+        const query =`
+        SELECT userId, firstName,lastName, emailAddress
+        FROM users
+        WHERE userId = ${req.params.id};
+        `
+        db.query(query,(err,result)=>{
+            if(err) throw err
+            res.json({
+                status:res.statusCode,
+                result
+            })
+        })
+    }
+    login(req,res){
+        const {emailAddress, userPwd} = req.body
+        const query = `
+        SELECT  firstName,lastName,emailAddress, userPwd
+        FROM users
+        WHERE emailAddress = '${emailAddress}';
+        `
+        db.query(query, async (err, result)=>{
+            if(err) throw err
+            if(!result?.length){
+                res.json({
+                    status: res.statusCode,
+                    msg: "You provided a wrong email."
+                })
+            }else {
+                await compare(UserPass,
+                    result[0].UserPass,
+                    (compErr, compResult)=>{
+                        if(compErr) throw compErr
+                        // Create a token
+                        let token =
+                        tokenCreated({
+                            UserEmail,
+                            UserPass
+                        })
+                        if(compResult) {
+                            res.json({
+                                msg: "You have logged in",
+                                token,
+                                result: result[0]
+                            })
+                        }else {
+                            res.json({
+                                status: res.statusCode,
+                                msg:
+                                "Invalid password or check if you have registered"
+                            })
+                        }
+                    })
+                }
+        })
+    }
+   async register(req,res){
+        const data =req.body
+        data.UserPass = await hash(data.UserPass,15)
+        //payload
+        const user ={
+            emailAddress : data.emailAddress,
+            userPwd : data.userPwd
         }
-    });   
-}
-  
-// Get Single Product by ID
-export const getUsersById = (id, result) => {
-    db.query("SELECT * FROM products WHERE id = ?", [id], (err, results) => {             
-        if (err) {
-            console.log(err);
-            result(err, null);
-        } else {
-            if (results.length === 0) {
-                result({ message: "User not found" }, null);
-            } else {
-                result(null, results[0]);
-            }
+        const query =`
+        INSERT INTO Users
+        SET ?
+        `
+        db.query(query,[data],(err)=>{
+            if (err) throw err
+            let token = tokenCreated(user)
+            res.json({
+                status:res.statusCode,
+                msg:"You are now registered."
+            })
+        })
+    }
+    updateUser(req,res){
+        const data = req.body
+        if(data.userPwd){
+            data.userPwd = hashSync(data.userPwd,15)
         }
-    });   
+        const query =`
+        UPDATE Users
+        SET ?
+        WHERE userId = ${req.params.id};
+        `
+        db.query(query,[data],(err)=>{
+            if(err) throw err
+            res.json({
+                status: res.statusCode,
+                msg: "The user record has been updated "
+            })
+        })
+    }
+    deleteUser(req,res){
+        const query =`
+        DELETE FROM Users
+        WHERE userId = ${req.params.id};
+        `
+        db.query(query,(err)=>{
+            if(err) throw err
+            res.json({
+                status: res.statusCode,
+                msg: "The user record has been deleted."
+            })
+        })
+    }
 }
-  
-// Insert Product to Database
-export const insertUser = async (data) => {
-    return new Promise((resolve, reject) => {
-        db.query("INSERT INTO Users SET ?", [data], (err, results) => {             
-            if (err) {
-                console.log(err);
-                reject(err);
-            } else {
-                resolve(results);
-            }
-        });   
-    });
-}
-
-  
-// Update Product in Database by ID
-export const updateUserById = (data, id, result) => {
-    db.query("UPDATE Users SET firstName = ?,  lastName = ? WHERE userID = ?", [data.firstName, data.lastName, id], (err, results) => {             
-        if (err) {
-            console.log(err);
-            result(err, null);
-        } else {
-            if (results.affectedRows === 0) {
-                result({ message: "user not found" }, null);
-            } else {
-                result(null, results);
-            }
-        }
-    });   
-}
-  
-// Delete Product from Database by ID
-export const deleteUserById = (id, result) => {
-    db.query("DELETE FROM Users WHERE id = ?", [id], (err, results) => {             
-        if (err) {
-            console.log(err);
-            result(err, null);
-        } else {
-            if (results.affectedRows === 0) {
-                result({ message: "User not found" }, null);
-            } else {
-                result(null, results);
-            }
-        }
-    });   
-};
-
-export const getUserByEmail = (emailAddress, callback) => {
-    db.query('SELECT * FROM users WHERE emailAddress = ?, Pwd = ?', [emailAddress, Pwd], (err, user) => {
-      if (err) {
-        callback(err, null);
-      } else {
-        callback(null, user[0]); 
-      }
-    });
-  };
-
-
+module.exports = Users

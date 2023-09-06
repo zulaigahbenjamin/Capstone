@@ -1,9 +1,8 @@
-// const products = require('./productModel.js');
-// const Users = require('./userModal.js');
-// const Cart = require('./cart.js');
-// // Export all objects
-// module.exports = {
-//     products: new products(),
-//     users: new Users(),
-//     cart: new Cart(),
-// }
+const Users = require('./userModal.js')
+const Products = require ('./productModel.js')
+const Orders = require ('./cart.js')
+module.exports = {
+    users: new Users,
+    product:new Products,
+    orders: new Orders
+}

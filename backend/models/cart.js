@@ -1,67 +1,80 @@
-// const db = require("../config/config.js");
+const db = require('../config/config.js')
 
-
-// class Cart {
-//     //Show all cart items
-//     fetchItems(req, res) {
-//         const query = `
-//         SELECT  userID, cartID, prodName, quantity, amount, prodURL
-//         FROM Cart;
-//         `
-//         db.query(query, (err, results) => {
-//             if (err) throw err
-//             res.json({
-//                 status: res.statusCode,
-//                 results
-//             })
-//         })
-//     }
-//     //Add to Cart
-//     addItem(req, res) {
-//         const query = `
-//         INSERT INTO Cart
-//         SET ?;
-//         `
-
-//         db.query(query, [req.body], (err) => {
-//             if (err) throw err
-//             res.json({
-//                 status: res.statusCode,
-//                 msg: "Item successfully added to cart"
-//             })
-//         })
-//     }
-//     //Delete item from Cart
-//     deleteItem(req, res) {
-//         const query = `
-//         DELETE FROM Cart
-//         WHERE prodId = ${req.params.id};
-//         `
-//         db.query(query, (err) => {
-//             if (err) throw err,
-//                 res.json({
-//                     status: res.statusCode,
-//                     msg: "Item has been deleted"
-//                 })
-//         })
-//     }
-//     //delete specific item from cart
-        
-
-//     //Edit existing product
-//     updateItem(req, res) {
-//         const query = `
-//         UPDATE Cart
-//         SET ? 
-//         `
-//         db.query(query, [req.body, req.params.id], (err) => {
-//             if (err) throw err
-//             res.json({
-//                 status: res.statusCode,
-//                 msg: "Product has been updated"
-//             })
-//         })
-//     }
-// }
-
-// module.exports = Cart
+class Orders{
+    getOrdersByUser(req,res){
+        const userId = req.params.userId;
+        const query =`
+        SELECT o.OrderID, p.ProdName, p.Quantity, p.Amount, o.OrderDate
+        FROM orders o
+        INNER JOIN product p ON o.ProdID = p.ProdID
+        WHERE o.UserID =  ${req.params.id}
+        `
+        db.query(query,(err,results)=>{
+            if(err) throw err
+            res.json({
+                status:res.statusCode,
+                results
+            })
+        })
+    }
+   
+    addOrders(req,res){
+        const data =req.body
+       
+        const query =`
+        INSERT INTO orders
+        SET ?
+        `
+        db.query(query,[data],(err)=>{
+            if (err) throw err
+          
+            res.json({
+                status:res.statusCode,
+                msg:"An Order was made."
+            })
+        })
+    }
+    updateOrders(req,res){
+        const data = req.body
+       
+        const query =`
+        UPDATE orders
+        SET ?
+        WHERE OrderID = ${req.params.id} AND UserID = ${req.params.id};
+        `
+        db.query(query,[data],(err)=>{
+            if(err) throw err
+            res.json({
+                status: res.statusCode,
+                msg: "Your order has been updated "
+            })
+        })
+    }
+    deleteOrders(req,res){
+        const query =`
+        DELETE FROM orders
+        WHERE UserID = ${req.params.id};
+        `
+        db.query(query,(err)=>{
+            if(err) throw err
+            res.json({
+                status: res.statusCode,
+                msg: "Your order has been removed."
+            })
+        })
+    }
+    deleteOrder(req,res){
+        const query =`
+        DELETE FROM orders
+        WHERE UserID = ${req.params.id} AND OrderID = ${req.params.id};
+        `
+        db.query(query,(err)=>{
+            if(err) throw err
+            res.json({
+                status: res.statusCode,
+                msg: "Your order has been removed."
+            })
+        })
+    }
+}
+module.exports = Orders
