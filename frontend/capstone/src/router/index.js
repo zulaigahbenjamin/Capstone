@@ -21,11 +21,6 @@ const routes = [
     component: () => import ('../views/ContactView.vue')
   },
   {
-    path: '/insider',
-    name: 'insider',
-    component: () => import ('../views/InsiderNote.vue')
-  },
-  {
     path: '/login',
     name: 'login',
     component: () => import ('../views/LoginView.vue')
@@ -40,11 +35,47 @@ const routes = [
     name: 'products',
     component: () => import ('../views/Products.vue')
   },
+{
+  path: "/products/:id",
+  name: "product-edit",
+  component: () => import("../views/ProdEdit.vue"),
+  props: true,
+},
+{
+  path: "/prod/add",
+  name: "prod add",
+  component: () => import("../views/ProdAdd.vue"),
+  props: true,
+},
+{
+  path: "/user/edit/:id",
+  name: "user edit",
+  component: () => import("../views/UserEdit.vue"),
+  props: true,
+},
+{
+  path: "/users/add",
+  name: "userAdd",
+  component: () => import("../views/UserAdd.vue"),
+},
   {
     path: '/cart',
     name: 'cart',
     component: () => import ('../views/CartView.vue')
+  },
+  {
+    path: '/login',
+    name: 'cart',
+    component: () => import ('../views/LoginView.vue'),
+    props: true,
+  },
+  {
+    path: "/register",
+    name: "register",
+    component: () => import("../views/RegisterView.vue"),
+    props: true,
   }
+
 ]
 
 const router = createRouter({

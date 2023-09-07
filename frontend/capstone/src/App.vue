@@ -17,14 +17,6 @@ export default {
 }
 </script>
 
-
-
-
-
-
-
-
-
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -33,6 +25,9 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
+/* NavBarComp {
+
+} */
 
 nav {
   padding: 30px;

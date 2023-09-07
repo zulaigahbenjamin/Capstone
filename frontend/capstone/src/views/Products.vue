@@ -1,81 +1,133 @@
 <template>
-  <div class="tem">
-    <h2 class="text-caro">Search Products</h2>
-    <div class="sort-filter-container">
-      <div class="filter-container">
-        <label for="filter">Filter by:</label>
-
-        <Products
-          :products="filteredProducts"
-          :filters="filters"
-          @set-filters="filtersChanged"
-        />
-      </div>
+  <input
+    class="m-2"
+    v-model="searchTerm"
+    placeholder="Search for a product..."
+  />
+  <h1>Products</h1>
+  <div class="container">
+    <div class="filter-btns">
+      <select id="sort-select" v-model="selectedSort">
+        <option value="options">Sort options</option>
+        <option value="alphabetical">Sort Alphabetically</option>
+        <option value="price-high">Sort by Price (High to Low)</option>
+        <option value="price-low">Sort by Price (Low to High)</option>
+      </select>
+      <button
+        type="button"
+        class="filter-btn"
+        :class="{ 'active-btn': selectedFilter === 'all' }"
+        @click="selectFilter('all')"
+      >
+        all
+      </button>
+   
+      <button
+        type="button"
+        class="filter-btn"
+        :class="{ 'active-btn': selectedFilter === 'Roasted' }"
+        @click="selectFilter('Roasted')"
+      >
+        Roasted Beans
+      </button>
+      <button
+        type="button"
+        class="filter-btn"
+        :class="{ 'active-btn': selectedFilter === 'Lightly Roasted' }"
+        @click="selectFilter('Lightly Roasted')"
+      >
+        Lightly Roasted Beans 
+      </button>
+      <button
+        type="button"
+        class="filter-btn"
+        :class="{ 'active-btn': selectedFilter === 'Arabica' }"
+        @click="selectFilter('Arabica')"
+      >
+        Arabica Beans
+      </button>
     </div>
   </div>
+  <div
+    v-if="filteredProducts.length > 0"
+    class="products_container media-container row row-cols-4 m-0"
+    id="products"
+  >
+    <CardComp
+      v-for="product of filteredProducts"
+      :key="product.prodId"
+      :product="product"
+    />
+    <sort/>
+  </div>
+  <SpinnerComp v-else />
+  <sort :products="products"/>
 </template>
 
+
 <script>
-import Products from "@/components/SortComp.vue";
-import { onMounted, ref } from "vue";
-
+import CardComp from "@/components/CardComp.vue";
+import sort from "@/components/SortComp.vue"
+import SpinnerComp from "@/components/spinnerComp.vue";
+import axios from 'axios'
 export default {
-  name: "Frontend",
-  components: { Products },
-  setup() {
-    const allProducts = ref([]);
-    const filteredProducts = ref([]);
-    const filters = ref({
-      s: "",
-      sort: "",
-      page: 1,
-    });
-
-    onMounted(async () => {
-      const response = await fetch(
-        "https://zulaigahcapstoneapi.onrender.com/products"
-      );
-      const responseData = await response.json();
-
-      if (Array.isArray(responseData.results)) {
-        allProducts.value = responseData.results;
-        filteredProducts.value = responseData.results;
-      } else {
-        console.error("The response content is not an array:", responseData);
-      }
-    });
-
-    const filtersChanged = (f) => {
-      filters.s = f.s;
-      filters.sort = f.sort;
-      filters.page = f.page;
-
-      let products = allProducts.value.filter((p) => {
-        // Check if p.title and p.description are defined before using toLowerCase()
-        const titleMatch =
-          p.prodName &&
-          p.prodName.toLowerCase().indexOf(filters.s.toLowerCase()) >= 0;
-        const descriptionMatch =
-          p.category &&
-          p.category.toLowerCase().indexOf(filters.s.toLowerCase()) >= 0;
-
-        return titleMatch || descriptionMatch;
-      });
-
-      if (filters.sort === "price-low") {
-        products.sort((a, b) => a.amount - b.amount);
-      } else if (filters.sort === "price-high") {
-        products.sort((a, b) => b.amount - a.amount);
-      }
-
-      filteredProducts.value = products;
-    };
-
+  data() {
     return {
-      filteredProducts,
-      filters,
-      filtersChanged,
+      selectedFilter: "all",
+      selectedSort: "options",
+      products: [],
+      filter: [],
+      searchTerm: "",
     };
   },
+  computed: {
+    sortedProducts() {
+      let sorted = this.products;
+//change 
+      if (this.selectedFilter !== "all") {
+        sorted = sorted.filter(
+          (product) => product.category === this.selectedFilter
+        );
+      }
+
+      if (this.selectedSort === "alphabetical") {
+        sorted.sort((a, b) => a.prodName.localeCompare(b.prodName));
+      } else if (this.selectedSort === "price-high") {
+        sorted.sort((a, b) => b.amount - a.amount);
+      } else if (this.selectedSort === "price-low") {
+        sorted.sort((a, b) => a.amount - b.amount);
+      }
+
+      return sorted;
+    },
+    filteredProducts() {
+      return this.sortedProducts.filter((product) =>
+        product.prodName.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+    },
+  },
+  methods: {
+    selectFilter(filter) {
+      this.selectedFilter = filter;
+    },
+  },
+ 
+    created() {
+    const prodId = this.$route.params.id;
+    axios
+      .get(`https://zulaigahcapstoneapi.onrender.com/products/${prodId}`)
+      .then((response) => {
+        this.product = response.data;
+      })
+      .catch((error) => {
+        console.error(error);
+        this.error = "An error occurred while fetching product details.";
+      });
+  },
+
+
+  components: { CardComp, SpinnerComp,sort },
 };
 </script>
+
+

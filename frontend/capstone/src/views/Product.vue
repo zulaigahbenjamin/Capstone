@@ -38,9 +38,9 @@ export default {
     };
   },
   created() {
-    const productId = this.$route.params.id;
+    const prodId = this.$route.params.id;
     axios
-      .get(`https://zulaigahcapstoneapi.onrender.com/products/${productId}`)
+      .get(`https://zulaigahcapstoneapi.onrender.com/products/${prodId}`)
       .then((response) => {
         this.productData = response.data;
       })

@@ -32,6 +32,7 @@
     </div>
     <div class="col-lg">
       <div class="image">
+        
         <h3 class="tee">Subscribe to our Newsletter</h3>
         <p style="color: white">
           Subscribe for all the latest deeals and daily discounts
@@ -189,7 +190,7 @@ h1 {
   background-image: url("https://i.postimg.cc/C5r1ZPRK/div-et-pb-column-1.png");
   opacity: unset;
   background-repeat: no-repeat;
-  height: 100vh;
+  height: 110vh;
   width: 100%;
 }
 button {

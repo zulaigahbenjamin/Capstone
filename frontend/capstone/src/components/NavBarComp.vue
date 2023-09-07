@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="place">
     <!-- Navbar -->
     <nav class="navbar sticky-top navbar-expand-lg">
       <div class="container-fluid">
@@ -22,9 +22,7 @@
             <li id="fade-in">
               <router-link to="/products">Products</router-link>
             </li>
-            <li id="fade-in">
-              <router-link to="/insider"> Insider Notes</router-link>
-            </li>
+           
             <li id="fade-in">
               <router-link to="/contact">Contact</router-link>
             </li>
@@ -44,7 +42,7 @@
 export default {};
 </script>
 
-<style scoped>
+<style >
 @keyframes fadeIn {
   from {
     opacity: 1;

@@ -1,46 +1,35 @@
 <template>
-    <nav class="navbar" role="navigation" aria-label="main navigation">
-      <div class="navbar-brand">
-        <a
-          role="button"
-          class="navbar-burger burger"
-          aria-label="menu"
-          aria-expanded="false"
-          data-target="navbarBasicExample"
-        >
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-        </a>
+  <div>
+    <h1>YOUR ITEMS</h1>
+    <div v-if="cart && cart.length > 0">
+      <div v-for="(product, index) in cart" :key="index">
+        <h1>{{ product.prodName }}</h1>
+        <img :src="product.prodUrl" alt="" class="w-25" />
+        <h2>Quantity: {{ product.quantity }}</h2>
+        <h3>Price: R{{ product.amount }}</h3>
+
+        <button @click="removeFromCart(index)">Remove</button>
       </div>
-      <div id="navbarBasicExample" class="navbar-menu">
-        <div class="navbar-end">
-          <div class="navbar-item">
-            <div class="buttons">
-              <router-link to="/inventory" class="button is-primary">
-               <strong> Inventory</strong>
-              </router-link>
-              <router-link to="/cart"  class="button is-warning">   <p>
-    Total cart items:
-    <span> {{cartQuantity}}</span> </p>
-              </router-link>
-            </div>
-          </div>
-        </div>
-      </div>
-    </nav>
+    </div>
+    <div v-else>
+      <p>Fill your cart up !</p>
+    </div>
+  </div>
 </template>
+
 <script>
-import {mapGetters} from "vuex"
 export default {
-    name: "Navbar",
-    computed: {
-    ...mapGetters([
-      'cartQuantity'
-    ])
+  computed: {
+    cart() {
+      return this.$store.state.cart;
+    },
   },
-  created() {
-    this.$store.dispatch("getCartItems");
-  }
-}
+  methods: {
+    removeFromCart(index) {
+      if (index >= 0 && index < this.cart.length) {
+        this.$store.commit("removeItemFromCart", index);
+      }
+    },
+  },
+};
 </script>
