@@ -27,6 +27,12 @@
               <router-link to="/contact">Contact</router-link>
             </li>
             <li id="fade-in">
+              <router-link to="/register">Register</router-link>
+            </li>
+            <li id="fade-in">
+              <router-link to="/admin">User</router-link>
+            </li>
+            <li id="fade-in">
               <router-link to="/cart"><i class="fa-solid fa-cart-shopping fa-lg" style="color: #000000;"></i></router-link>
             </li>
             <li id="fade-in">
@@ -42,7 +48,7 @@
 export default {};
 </script>
 
-<style >
+<style scoped>
 @keyframes fadeIn {
   from {
     opacity: 1;

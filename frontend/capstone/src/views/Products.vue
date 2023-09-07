@@ -20,6 +20,7 @@ import Products from "@/components/SortComp.vue";
 import { onMounted, ref } from "vue";
 
 export default {
+  name: "Frontend",
   components: { Products },
   setup() {
     const allProducts = ref([]);
@@ -50,7 +51,6 @@ export default {
       filters.page = f.page;
 
       let products = allProducts.value.filter((p) => {
-        // Check if p.title and p.description are defined before using toLowerCase()
         const titleMatch =
           p.prodName &&
           p.prodName.toLowerCase().indexOf(filters.s.toLowerCase()) >= 0;

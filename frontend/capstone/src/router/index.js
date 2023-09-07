@@ -20,11 +20,7 @@ const routes = [
     name: 'contact',
     component: () => import ('../views/ContactView.vue')
   },
-  {
-    path: '/login',
-    name: 'login',
-    component: () => import ('../views/LoginView.vue')
-  },
+
   {
     path: '/product/:id',
     name: 'product',
@@ -58,14 +54,30 @@ const routes = [
   name: "userAdd",
   component: () => import("../views/UserAdd.vue"),
 },
+{
+  path: "/user/edit/:id",
+  name: "user edit",
+  component: () => import("../views/UserEdit.vue"),
+  props: true,
+},
+{
+  path: "/users/add",
+  name: "userAdd",
+  component: () => import("../views/UserAdd.vue"),
+},
   {
     path: '/cart',
     name: 'cart',
     component: () => import ('../views/CartView.vue')
   },
   {
+    path: '/admin',
+    name: 'admin',
+    component: () => import ('../views/AdminTable.vue')
+  },
+  {
     path: '/login',
-    name: 'cart',
+    name: 'login',
     component: () => import ('../views/LoginView.vue'),
     props: true,
   },
@@ -74,7 +86,8 @@ const routes = [
     name: "register",
     component: () => import("../views/RegisterView.vue"),
     props: true,
-  }
+  },
+
 
 ]
 

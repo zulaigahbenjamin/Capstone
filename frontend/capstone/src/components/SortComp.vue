@@ -1,35 +1,26 @@
 <template>
   <div class="col-md-12 mb-4 input-group">
-    <input
-      class="form-control search"
-      placeholder="What are you looking for?"
-      @keyup="search($event.target.value)"
-    />
+    <input class="form-control search" placeholder="What are you looking for?" @keyup="search($event.target.value)" />
     <div class="input-group-append">
       <div class="sort-filter-container">
         <div class="filter-container">
           <label for="filter">Filter by:</label>
           <select id="filter" v-model="selectedCategory">
             <option value="all">All Items</option>
-            <option value="Lightly Roasted">Lightly Roasted</option>
+            <option value="Roasted">Roasted</option>
             <option value="Arabica">Arabica</option>
             <option value="Lightly Roasted">Lightly Roasted</option>
           </select>
-          <label style="margin-left: 20px"
-            >&#11820; | Showing 1-0 of 10 results</label
-          >
+          <label style="margin-left: 20px">&#11820; | Showing 1-0 of 10 results</label>
         </div>
         <div class="sort-container">
           <label>Show </label>
-          <label
-            style="
+          <label style="
               background-color: white;
               color: rgb(58, 58, 58);
               padding: 7px;
-            "
-          >
-            16</label
-          >
+            ">
+            16</label>
           <label for="sort">Sort by:</label>
           <select id="sort" v-model="sortOrder">
             <option value="price-high">Price Low to High</option>
@@ -42,32 +33,23 @@
 
   <div class="container-fluid">
     <div class="row gap-3 justify-content-center" v-if="products">
-      <div
-        v-for="product of products"
-        :key="product.id"
-        class="col-12 col-sm-6 col-md-3 col-lg-${product.size} my-4"
-      >
+      <div v-for="product of products" :key="product.prodId" class="col-12 col-sm-6 col-md-3 col-lg-${product.size} my-4">
         <div style="width: 100%; height: 100%" class="card">
-          <img
-            :src="product.prodUrl"
-            class="card-img-top"
-            style="padding: 0.6rem"
-            height="390"
-          />
+          <img :src="product.prodUrl" class="card-img-top" style="padding: 0.6rem" height="390" />
           <div class="card-body">
             <h5 class="card-title">{{ product.prodName }}</h5>
             <p class="card-text">{{ product.category }}</p>
             <p class="card-text">R {{ product.amount }}</p>
-            <router-link
-              :to="{ name: 'product', params: { id: product.prodId } }"
-              >See more</router-link
-            >
+            <router-link :to="{ name: 'product', params: { id: product.prodId } }">See more</router-link>
+            <button @click="addProductToCart(product.prodId)" class="btn-add-to-cart btn m-2">
+              Add to cart
+            </button>
           </div>
         </div>
       </div>
     </div>
-  
-   
+
+
   </div>
 </template>
 
@@ -118,6 +100,11 @@ export default {
         }
       });
     },
+    addProductToCart(product) {
+
+      this.$store.dispatch("addProductToCart", product);
+    },
+
     sortProducts() {
       if (this.sortOrder === "price-high") {
         this.filteredProducts = this.products.sort(
@@ -154,7 +141,7 @@ export default {
       });
     },
   },
- 
+
 };
 </script>
 
@@ -163,6 +150,7 @@ export default {
   margin-top: 20px;
   position: relative;
 }
+
 input {
   width: 200px;
 }

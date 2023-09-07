@@ -57,7 +57,7 @@
           autocomplete="off"
           required
           name="userPwd"
-          v-model="userPass"
+          v-model="userPwd"
         />
         <!-- <label>Profile</label>
         <input

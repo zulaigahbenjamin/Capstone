@@ -11,7 +11,6 @@
           />
           <div class="card-body justify-content-center">
             <h5 class="card-title">{{ productData.prodName }}</h5>
-            <!-- <p class="card-text">{{ product.descrption }}</p> -->
             <p class="card-text">{{ productData.category }}</p>
             <p class="card-text">R {{ productData.amount }}</p>
             <router-link class="btn" to="/products">Go Back</router-link>
@@ -29,18 +28,17 @@
 import axios from "axios";
 
 export default {
-  props: {
-    product: Object,
-  },
+
   data() {
     return {
-      productData: null,
+      productData: null, 
+     
     };
   },
   created() {
     const prodId = this.$route.params.id;
     axios
-      .get(`https://zulaigahcapstoneapi.onrender.com/products/${prodId}`)
+      .get(`https://zulaigahcapstoneapi.onrender.com/product/${prodId}`)
       .then((response) => {
         this.productData = response.data;
       })
@@ -51,6 +49,8 @@ export default {
   },
 };
 </script>
+
+
 <style scoped>
   @import url('https://fonts.googleapis.com/css2?family=REM:wght@200&display=swap');
   body{

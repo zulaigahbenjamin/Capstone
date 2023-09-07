@@ -1,125 +1,226 @@
-<template>
-    <div class="container d-flex p-4">
-      <div class="col-6">
-        <img
-          src="https://i.postimg.cc/YCJbkvPZ/c9bl-removebg-preview.png"
-          alt=""
-        />
-      </div>
-  
-      <div class="col-6">
-        <!-- <button onclick="history.back()" class="back-btn"> -->
-        <h1>WELCOME BACK !</h1>
-  
-        <form @submit.prevent="userLogin">
-          <label for="email" class="text-start">ENTER YOUR EMAIL</label>
-          <br />
-          <input
-            type="email"
-            name="email"
-            v-model="emailAdd"
-            placeholder="eg. zulaigahbenjamin09@gmail.com"
-          />
-          <br />
-          <label for="password" class="text-start">PASSWORD</label>
-          <br />
-          <input type="password" v-model="userPass" name="password" />
-  
-          <button type="submit">Log In</button>
-          <p>
-            Dont have an account?
-            <router-link
-              to="/register"
-              class="register-link text-decoration-none text-white"
-              >Register</router-link
-            >
-          </p>
-        </form>
-      </div>
-      <br />
+<!-- <template>
+  <div class="container d-flex p-4">
+    <div class="col-6">
+      <img />
     </div>
-    <br />
-    <br />
-  </template>
+
+    <div class="col-6 login-field">
+      <h1 class="text">WELCOME BACK !</h1>
+
+      <form @submit.prevent="userLogin">
+        <div>
+          <div class="fas fa-envelope"></div>
+          <label for="email" class="text-start">ENTER YOUR EMAIL</label>
+
+          <input type="email" name="email" v-model="emailAddress" placeholder="eg. zulaigahbenjamin09@gmail.com" />
+
+        </div>
+        <div>
+          <div class="fas fa-lock"></div>
+          <label for="password" class="text-start">PASSWORD</label>
+          <input type="password" v-model="userPwd" name="password" />
+        </div>
+        <button type="submit">Log In</button>
+        <p>
+          Dont have an account?
+          <button class="link"><router-link to="/register"
+              class="register-link text-decoration-none text-white">Register</router-link></button>
+        </p>
+      </form>
+    </div>
+ 
+  </div>
+ 
+</template> -->
+
+<template>
+  <div class="container d-flex p-4">
+    <div class="col-6 coffee-image">
+      <!-- Your coffee shop image goes here -->
+      <img src="https://i.postimg.cc/1t65yHfR/Untitled-design-19-1600x.webp" alt="Coffee Shop" />
+    </div>
+
+    <div class="col-6 login-field">
+      <h1 class="text">WELCOME BACK!</h1>
+
+      <form @submit.prevent="userLogin">
+        <div class="input-group">
+          <div class="input-icon fas fa-envelope"></div>
+          <label for="email" class="text-start">ENTER YOUR EMAIL</label>
+          <input type="email" name="email" v-model="emailAddress" placeholder="e.g., zulaigahbenjamin09@gmail.com" />
+        </div>
+        <div class="input-group">
+          <div class="input-icon fas fa-lock"></div>
+          <label for="password" class="text-start">PASSWORD</label>
+          <input type="password" v-model="userPwd" name="password" />
+        </div>
+        <button type="submit">Log In</button>
+        <div class="registration-section">
+        <p>Don't have an account?</p>
+        <button class="link">
+          <router-link to="/register" class="register-link text-decoration-none text-white">Register</router-link>
+        </button>
+      </div>
+      </form>
+    </div>
+  </div>
+</template>
+
   
 <script>
-  import Swal from "sweetalert2";
-  export default {
-    data() {
-      return {
-        emailAddress: "",
-        userPwd: "",
-      };
-    },
-    beforeCreate() {
-      this.$store.dispatch("cookieCheck");
-    },
-    methods: {
-      async userLogin() {
-        console.log("Reached");
-        try {
-          const payload = {
-            emailAddress: this.emailAddress,
-            userPwd: this.userPwd,
-          };
-          const resp = await this.$store.dispatch("login", payload);
-          if (resp.success && resp.token) {
-            await Swal.fire({
-              icon: "success",
-              title: "Logged in Successfully",
-              text: "You are now logged in!",
-            });
-            this.$router.push("/");
-          } else {
-            const errMsg = resp.error || "Unexpected error";
-            await Swal.fire({
-              icon: "error",
-              title: "Login failed",
-              text: errMsg,
-            });
-          }
-        } catch (e) {
-          console.error("Error while logging in: ", e);
+import Swal from "sweetalert2";
+
+export default {
+  data() {
+    return {
+      emailAddress: "",
+      userPwd: "",
+    };
+  },
+  beforeCreate() {
+    this.$store.dispatch("cookieCheck");
+  },
+  methods: {
+    async userLogin() {
+      console.log("Reached");
+      try {
+        const payload = {
+          emailAddress: this.emailAddress,
+          userPwd: this.userPwd,
+        };
+        const resp = await this.$store.dispatch("login", payload);
+        if (resp.success && resp.token) {
+          await Swal.fire({
+            icon: "success",
+            title: "Logged in Successfully",
+            text: "You are now logged in!",
+          });
+          this.$router.push("/admin");
+        } else {
+          const errMsg = resp.error || "Unexpected error";
+          await Swal.fire({
+            icon: "error",
+            title: "Login failed",
+            text: errMsg,
+          });
         }
-      },
+      } catch (e) {
+        console.error("Error while logging in: ", e);
+      }
     },
-  };
+  },
+};
 </script>
 
   
-  <style scoped>
-  .register-link {
-    color: var(--secondary-color) !important;
+<style scoped>
+.container {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.coffee-image img {
+  width: 100%;
+  height: auto;
+}
+
+.login-field {
+  background-color: #ffeecc;
+  padding: 20px;
+  border-radius: 0 10px 10px 0;
+}
+
+.text {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #6f4e37;
+}
+
+form {
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.input-group {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  color: #6f4e37;
+}
+.registration-section {
+  display: flex;
+ 
+}
+label {
+  font-size: 16px;
+  color: #6f4e37;
+}
+.link, input:hover {
+  color: brown;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid brown;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+input:hover {
+  color: pink;
+}
+
+button {
+  background-color: #6f4e37;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #573e2c;
+}
+
+.link {
+  font-size: 16px;
+}
+
+p {
+  display: flex;
+}
+
+.register-link {
+  color: #6f4e37;
+  /* Coffee brown color */
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  .container {
+    border-radius: 0;
   }
-  h1 {
-    font-size: 80px !important;
+
+  .col-lg-6 {
+    flex: 0 0 100%;
+    max-width: 100%;
   }
-  button {
-    width: 10em;
-    position: relative;
-    height: 3.5em;
-    border: 3px ridge var(--secondary-color);
-    outline: none;
-    background-color: transparent;
-    color: white;
-    transition: 1s;
-    border-radius: 0.3em;
-    font-size: 16px;
-    margin: 14px;
+
+  .login-field {
+    border-radius: 0;
   }
-  input {
-    width: 100%;
-    padding: 14px 12px;
-    border-radius: 6px;
-    border: 2px solid var(--text-color);
-    color: var(--title-color);
-    font-size: var(--smaller-font-size);
-    font-weight: var(--font-medium);
-    transition: border 0.4s;
-  }
-  label {
-    display: block;
-    margin: 5px;
-    font-size: 29px;
-  }
-  </style>
+}</style>
