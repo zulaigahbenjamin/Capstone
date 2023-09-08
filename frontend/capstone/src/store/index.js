@@ -1,34 +1,33 @@
-import { createStore } from 'vuex';
-import axios from "axios";
-import Cookies from "js-cookie";
+import { createStore } from "vuex";
 
 const apiUrl = 'https://zulaigahcapstoneapi.onrender.com/';
 
+import axios from "axios";
+import Cookies from "js-cookie";
 export default createStore({
   state: {
-    products: null,
-    product: null,
     users: null,
     user: null,
-    msg: null,
-    error: null,
+    products: null,
+    product: null,
     token: null,
     userData: null,
     userRole: null,
+    msg: null,
+    error: null,
     regStatus: null,
     logStatus: null,
     cart: [],
-    filteredProducts: [],
-    
+    addProductToCart: null,
   },
+
   getters: {
     cartTotalPrice(state) {
       return state.cart.reduce((total, product) => total + product.amount, 0);
     },
-
   },
   mutations: {
-
+   
     SET_PRODUCTS(state, products) {
       state.products = products;
     },
@@ -36,22 +35,11 @@ export default createStore({
     SET_PRODUCT(state, product) {
       state.product = product;
     },
-
-    setToken(state, token) {
-      state.token = token;
-    },
-
-    setUsers(state, users) {
+    setUsers: (state, users) => {
       state.users = users;
     },
-
-    setSpinner(state, products) {
-      state.showSpinner = products;
-    },
-    setFilteredProducts(state, selectedCategory) { // Mutation to set filteredProducts
-      state.filteredProducts = state.products.filter((product) => {
-        return product.category === selectedCategory || selectedCategory === "all";
-      });
+    setUser: (state, user) => {
+      state.user = user;
     },
     setRegStatus(state, status) {
       state.regStatus = status;
@@ -89,28 +77,48 @@ export default createStore({
     setCart(state, value) {
       state.cart = value;
     },
+ 
     addProductToCart(state, product) {
       state.cart.push(product);
     },
-    decrementProductQuantity(state, prodId) {
-      const product = state.products.find(
-        (product) => product.prodId === prodId
-      );
-      if (product) {
-        product.quantity--;
-      }
-    },
-
     removeProductFromCart(state, prodId) {
       state.cart = state.cart.filter((product) => product.prodId !== prodId);
     },
+    setFilteredProducts(state, selectedCategory) { // Mutation to set filteredProducts
+      state.filteredProducts = state.products.filter((product) => {
+        return product.category === selectedCategory || selectedCategory === "all";
+      });
+    },
+
+
     clearCart(state) {
-      state.cart = [];
+      state.cartItems = [];
     },
-    
-    },
- 
+  },
   actions: {
+    async fetchUsers(context) {
+      try {
+        let response = await fetch(`${apiUrl}users`);
+        let { results } = await response.json();
+        context.commit("setUsers", results);
+      } catch (error) {
+        alert(error.message);
+      }
+    },
+
+    getUser: async (context, id) => {
+      try {
+        const res = await fetch(`${apiUrl}users/${id}`);
+        if (!res.ok) {
+          throw new Error("Failed to fetch user by ID");
+        }
+        const user = await res.json();
+
+        context.commit("setUser", user);
+      } catch (error) {
+        console.error(error);
+      }
+    },
 
     async fetchProducts(context) {
       try {
@@ -121,7 +129,6 @@ export default createStore({
         alert(error.message);
       }
     },
-    
     async fetchProduct(context, prodId) {
       try {
         let response = await fetch(`${apiUrl}product/${prodId}`);
@@ -132,28 +139,13 @@ export default createStore({
       }
     },
 
-    async fetchUsers(context) {
-      try {
-        let response = await fetch(`${apiUrl}users`);
-        let { results } = await response.json();
-        context.commit("setUsers", results);
-      } catch (error) {
-        alert(error.message);
-      }
-    },
-    filterProducts(context, selectedCategory) {
-      const products = context.state.products;
-      const filteredProducts = products.filter((product) => {
-        return product.category === selectedCategory || selectedCategory === "all";
-      });
-      context.commit("setFilteredProducts", filteredProducts);
-    },
     async register(context, payload) {
       console.log("Reached");
       try {
         const res = await axios.post(`${apiUrl}users`, payload);
         console.log("Res: ", res.data);
         const { msg, err, token } = res.data;
+
         if (msg === "An error occured") {
           context.commit("setError", msg);
           context.commit("setRegStatus", "Not registered");
@@ -172,6 +164,8 @@ export default createStore({
         throw e;
       }
     },
+
+
     async login(context, payload) {
       try {
         const res = await axios.post(`${apiUrl}users/login`, payload);
@@ -243,43 +237,40 @@ export default createStore({
       context.commit("setUserData", null);
       Cookies.remove("userToken");
     },
+    
     async getCart(context, id) {
-      const res = await axios.get(`${apiUrl}users/${id}/cart`);
+      const res = await axios.get(`${URL}users/${id}/cart`);
       context.commit("setCart", res.data);
       console.log(id);
     },
+
     async addProductToCart({ commit }, { userId, prodId }) {
       try {
-        // Send a POST request to your server's API endpoint
         const response = await axios.post(`${apiUrl}users/${userId}/cart`, {
           userId,
           prodId,
         });
+
         if (response.status === 200) {
-          commit("addProductToCart", response.data); 
+          commit("addProductToCart", response.data); // Assuming the response contains the added product
         } else {
-  
         }
       } catch (error) {
         console.error(error);
+       
       }
     },
-    async removeProductFromCart({ commit }, { userId, prodId }) {
+
+
+    async removeFromCart({ commit }, { userId, cartId }) {
       try {
-        await axios.delete(`${apiUrl}users/${userId}/cart/${prodId}`);
+        await axios.delete(`${apiUrl}users/${userId}/cart/${cartId}`);
 
-        // Commit the mutation to remove the item from the cart in the store
-        commit("removeFromCart", prodId);
-
-        // Optionally, update the cart's total price or perform other operations
+        commit("removeFromCart", cartId);
       } catch (error) {
         console.error(error);
-        // Handle network errors or other exceptions
       }
     },
-
-    
   },
-  modules: {
-  }
-})
+  modules: {},
+});

@@ -1,11 +1,12 @@
 <template>
     <tr class="table-row">
-      <th class="table-head text-white">{{ product.prodId}}</th>
-      <td class="text-white">{{ product.prodName }}</td>
-      <td class="text-white">{{ product.quantity }}</td>
-      <td class="text-white">R{{ product.amount }}</td>
-      <td class="text-white">{{ product.category }}</td>
-      <td><img :src="product.prodUrl" alt="" class="prodImg" /></td>
+      <th class="table-head text-black">{{ product.prodId}}</th>
+     
+      <td class="text-black ml-2">{{ product.prodName }}</td>
+      <td class="text-black">{{ product.quantity }}</td>
+      <td class="text-black">R{{ product.amount }}</td>
+      <td class="text-black">{{ product.category }}</td>
+      <td><img :src="product.prodUrl" alt="" class="prodImg m-5" /></td>
       <!-- <td class="text-white text-start w-25">
         {{ product.description }}
       </td> -->
@@ -36,7 +37,7 @@
       async deleteProduct(id) {
         try {
           await axios.delete(`https://zulaigahcapstoneapi.onrender.com/products/${id}`);
-          this.$store.dispatch("getProducts");
+          this.$store.dispatch("fetchProducts");
           alert("Product has been deleted");
         } catch (err) {
           alert(err);
@@ -74,7 +75,7 @@
     padding-right: 1.25rem;
     padding-top: 0.25rem;
     padding-bottom: 0.25rem;
-    background-color: #00ff6a;
+    background-color: #d778c4;
     color: #fff;
     border-radius: 0.125rem;
   }
@@ -83,7 +84,7 @@
     padding-right: 1.25rem;
     padding-top: 0.25rem;
     padding-bottom: 0.25rem;
-    background-color: #fa0000;
+    background-color: #da6fd1;
     border-radius: 0.125rem;
   }
   
@@ -116,7 +117,7 @@
       padding-right: 1.25rem;
       padding-top: 0.25rem;
       padding-bottom: 0.25rem;
-      background-color: #00ff6a;
+      background-color: #7d4f7b;
       color: #fff;
       border-radius: 0.125rem;
     }
@@ -125,7 +126,7 @@
       padding-right: 1.25rem;
       padding-top: 0.25rem;
       padding-bottom: 0.25rem;
-      background-color: #fa0000;
+      background-color: #e875dc;
       border-radius: 0.125rem;
     }
     .td {
@@ -134,7 +135,7 @@
     }
   }
   
-  @media screen and (max-width: 700px) {
+  @media screen and (max-width: 300px) {
     html,
     body {
       width: 100%;
@@ -154,7 +155,7 @@
       padding-right: 1.25rem;
       padding-top: 0.25rem;
       padding-bottom: 0.25rem;
-      background-color: #fa0000;
+      background-color: #e875dc;
       border-radius: 0.125rem;
     }
   }

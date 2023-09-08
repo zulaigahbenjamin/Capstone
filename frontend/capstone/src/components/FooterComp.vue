@@ -1,7 +1,7 @@
 <template>
 
 
-<div class="footer">
+
 <footer class=" text-center text-lg-start text-white">
   <!-- Grid container -->
   <div class="container p-4">
@@ -19,17 +19,17 @@
 
         <ul class="list-unstyled d-flex flex-row justify-content-center">
           <li>
-            <a class="text-white px-2" href="#!">
+            <a class="text-black px-2" href="#!">
               <i class="fab fa-facebook-square"></i>
             </a>
           </li>
           <li>
-            <a class="text-white px-2" href="#!">
+            <a class="text-black px-2" href="#!">
               <i class="fab fa-instagram"></i>
             </a>
           </li>
           <li>
-            <a class="text-white ps-2" href="#!">
+            <a class="text-black ps-2" href="#!">
               <i class="fab fa-youtube"></i>
             </a>
           </li>
@@ -40,26 +40,23 @@
 
       <!--Grid column-->
       <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
-        <h5 class="text-uppercase mb-4">Quick Links</h5>
+        <h5 class="text-uppercase-black mb-4">Quick Links</h5>
 
         <ul class="list-unstyled">
-          <li class="mb-2">
-            <a href="#!" ><router-link to="/products"></router-link>Shop Our Collections</a>
+          <li class="mb-2 text-black text-decoration-none">
+            <router-link to="/products"><p style="text-decoration:none;">Shop Our Collections</p></router-link>
           </li>
           <li class="mb-2">
-            <a href="#!" >About Urban Bean Bistro</a>
+            <router-link to="/about">About Urban Bean Bistro</router-link>
+          </li>
+
+          <li class="mb-2">
+            <router-link to="/register">Register OR Login For Daily Discounts</router-link>
+
           </li>
           <li class="mb-2">
-            <a href="#!" >Whats in your cart</a>
-          </li>
-          <li class="mb-2">
-            <a href="#!">Login or Register</a>
-          </li>
-          <li class="mb-2">
-            <a href="#!">Cheack Our Insider Notes</a>
-          </li>
-          <li class="mb-2">
-            <a href="#!">Contact</a>
+            <router-link to="/contact">Contact US</router-link>
+
           </li>
         </ul>
       </div>
@@ -94,7 +91,7 @@
   </div>
   <!-- Copyright -->
 </footer>
-</div>
+
     <!-- Footer End -->
 </template>
 
@@ -106,12 +103,19 @@ export default {
 
 <style scoped>
 
-.footer {
-  padding: 0.75rem 1.25rem;
+footer {
+
   background-color: rgba(0, 0, 0, 0.03);
   border-top: 1px solid rgba(0, 0, 0, 0.125);
 }
 i, p {
     color:black;
+    text-decoration: none;
+}
+h5 {
+  color:grey;
+}
+li {
+  text-decoration: none;
 }
 </style>

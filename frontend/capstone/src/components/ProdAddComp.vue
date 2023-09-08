@@ -1,8 +1,9 @@
 <template>
   <div>
     <div class="containers ">
-      <label>Name</label>
+      <label>Name</label><br/>
       <input type="text" autocomplete="on" required name="prodName" v-model="prodName" />
+      <br/>
       <label>Quantity</label>
       <input type="text" autocomplete="ofn" required name="quantity" v-model="quantity" />
       <label>Price</label>
@@ -57,7 +58,7 @@ export default {
         this.prodUrl = "";
         //   this.description = "";
 
-        this.$router.push("/admin");
+        this.$router.push("/products");
         alert("Product has been created");
       } catch (err) {
         alert(err);
@@ -74,10 +75,7 @@ label {
 }
 
 .containers {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 2.5rem;
-  float:left;
+  margin-bottom:20px;
 }
 
 label {
@@ -96,7 +94,7 @@ input {
   margin-left: auto;
   padding: 0.5rem 1rem;
   background-color: brown;
-  color: #ffffff;
+  color: #ef87ec;
   text-align: center;
   width: fit-content;
   border-radius: 0.2rem;

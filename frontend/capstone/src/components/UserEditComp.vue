@@ -121,7 +121,7 @@
               userRole: this.user.userRole,
               emailAddress: this.user.emailAddress,
               userPass: this.user.userPwd,
-              userProfile: this.user.userProfile,
+              // userProfile: this.user.userProfile,
             }
           );
           this.firstName = "";

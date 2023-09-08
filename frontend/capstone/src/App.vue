@@ -8,11 +8,11 @@
 
 <script>
 import NavBarComp from '@/components/NavBarComp.vue'; 
-import FooterComp from '@/components/FooterComp.vue'// Adjust the path
+import FooterComp from '@/components/FooterComp.vue';
 
 export default {
   components: {
-    NavBarComp, FooterComp// Register the component
+    NavBarComp, FooterComp
   },
 }
 </script>
@@ -39,6 +39,6 @@ nav a {
 }
 
 nav a.router-link-exact-active {
-  color: #42b983;
+  color: #d88bc1;
 }
 </style>

@@ -14,3 +14,8 @@
     },
   };
   </script>
+  <style>
+button {
+    color: #ef87ec;
+}
+</style>

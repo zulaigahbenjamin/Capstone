@@ -1,27 +1,25 @@
+<!-- Example cart component template -->
 <template>
   <div>
-    <h1>YOUR ITEMS</h1>
-    <div v-if="cart && cart.length > 0">
-      <div v-for="(product, prodId) in cart" :key="prodId">
-        <h1>{{ product.prodName }}</h1>
-        <img :src="product.prodUrl" alt="" class="w-20" />
-        <h2>Quantity: {{ product.quantity }}</h2>
-        <h3>Price: R{{ product.amount }}</h3>
+    <h2>Cart</h2>
+    <ul>
+      <li v-for="(product, index) in $store.state.cart" :key="index, product">
+        <h3>{{ product.prodName }}</h3>
+        <img :src="product.prodUrl" alt="Product Image" />
+        <p>Quantity: {{ product.quantity }}</p>
+        <p>Price: R {{ product.amount }}</p>
 
-        <button @click="removeProductFromCart(index)">Remove</button>
-      </div>
-    </div>
-    <div v-else>
-      <p>Add TO Your Cart!</p>
-    </div>
+      </li>
+    </ul>
   </div>
 </template>
+
 
 <script>
 export default {
   computed: {
     cart() {
-      return this.$store.state.cart;
+      this.$store.dispatch("addProductToCart", productObject);
     },
   },
   methods: {

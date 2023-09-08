@@ -1,55 +1,63 @@
 <template>
-  <div class="col-md-12 mb-4 input-group">
-    <input class="form-control search" placeholder="What are you looking for?" @keyup="search($event.target.value)" />
-    <div class="input-group-append">
-      <div class="sort-filter-container">
-        <div class="filter-container">
-          <label for="filter">Filter by:</label>
-          <select id="filter" v-model="selectedCategory">
+  <div class="color">
+    <div class="col-md-12 mb-4">
+      <div class="input-group">
+        <i class="fa-solid fa-magnifying-glass" style="color: #000000;width: 50%; text-align:center;  "><input
+            class="form-control search" placeholder="What are you looking for?"
+            @keyup="search($event.target.value)" /></i>
+
+      </div>
+    </div>
+
+    <div class="col-md-12 mb-4">
+      <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+          <label for="filter" class="filter-label">Filter by:</label>
+          <select id="filter" v-model="selectedCategory" class="form-control filter-select">
             <option value="all">All Items</option>
             <option value="Roasted">Roasted</option>
             <option value="Arabica">Arabica</option>
             <option value="Lightly Roasted">Lightly Roasted</option>
           </select>
-          <label style="margin-left: 20px">&#11820; | Showing 1-0 of 10 results</label>
         </div>
-        <div class="sort-container">
-          <label>Show </label>
-          <label style="
-              background-color: white;
-              color: rgb(58, 58, 58);
-              padding: 7px;
-            ">
-            16</label>
-          <label for="sort">Sort by:</label>
-          <select id="sort" v-model="sortOrder">
+        <div class="col-md-6 col-lg-4">
+          <label for="sort" class="sort-label">Sort by:</label>
+          <select id="sort" v-model="sortOrder" class="form-control sort-select">
             <option value="price-high">Price Low to High</option>
             <option value="price-low">Price High to Low</option>
           </select>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="container-fluid">
-    <div class="row gap-3 justify-content-center" v-if="products">
-      <div v-for="product of products" :key="product.prodId" class="col-12 col-sm-6 col-md-3 col-lg-${product.size} my-4">
-        <div style="width: 100%; height: 100%" class="card">
-          <img :src="product.prodUrl" class="card-img-top" style="padding: 0.6rem" height="390" />
-          <div class="card-body">
-            <h5 class="card-title">{{ product.prodName }}</h5>
-            <p class="card-text">{{ product.category }}</p>
-            <p class="card-text">R {{ product.amount }}</p>
-            <router-link :to="{ name: 'product', params: { id: product.prodId } }">See more</router-link>
-            <button @click="addProductToCart(product.prodId)" class="btn-add-to-cart btn m-2">
-              Add to cart
-            </button>
+
+
+
+    <div class="container-fluid">
+      <div class="row gap-3 justify-content-center" v-if="products">
+        <div v-for="product of products" :key="product.prodId" class="col-12 col-sm-6 col-md-4 col-lg-3 my-4">
+          <div class="card coffee-card">
+            <img :src="product.prodUrl" class="card-img-top" alt="Coffee" />
+            <div class="card-body">
+              <h5 class="card-title">{{ product.prodName }}</h5>
+              <p class="card-text">{{ product.category }}</p>
+              <p class="card-text">R {{ product.amount }}</p>
+            </div>
+            <div class="card-footer">
+              <router-link :to="{ name: 'product', params: { id: product.prodId } }" class="btn btn-outline btn-sm">
+                See More
+              </router-link>
+              <button @click="addProductToCart(product.prodId)" class="btn btn-dark btn-sm">
+                Add to Cart
+              </button>
+            </div>
           </div>
         </div>
       </div>
+
+
+
     </div>
-
-
   </div>
 </template>
 
@@ -146,12 +154,90 @@ export default {
 </script>
 
 <style scoped>
-.input-group {
-  margin-top: 20px;
-  position: relative;
+.color {
+  background-color: rgba(220, 164, 125, 1);
+}
+/* Custom styling for coffee shop cards */
+.coffee-card {
+  background-color: #fff;
+  border: 9px solid #eba75f79;
+  border-radius: 9px;
+  box-shadow: 1px 7px 9px rgba(212, 173, 90, 0.699);
+  transition: transform 0.4s;
 }
 
-input {
-  width: 200px;
+.coffee-card:hover {
+  transform: scale(1.03);
 }
-</style>
+
+.coffee-card .card-title {
+  color: #b47d64;
+  font-weight: bold;
+}
+
+.coffee-card .card-text {
+  color: #aa91a6;
+}
+
+.coffee-card .btn-outline-primary {
+  color: #ecabe7;
+
+}
+
+.coffee-card .btn-outline:hover {
+  background-color: #eaa8df;
+  color: #fff;
+}
+
+.coffee-card .btn-dark {
+  background-color: #333;
+  color: #fff;
+}
+
+.coffee-card .btn-dark:hover {
+  background-color: #555;
+}
+
+.card-footer {
+  white-space: 2px;
+}
+
+.search {
+  width: 5rem;
+  border-radius: 8px;
+  padding: 10px;
+  margin-left: 20px;
+}
+
+.search {
+  width: 100%;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+/* Custom styling for filter and sort containers */
+.sort-filter-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Custom styling for filter container */
+.filter-container,
+.sort-container {
+  text-align: center;
+}
+
+/* Custom styling for filter label and select */
+.filter-label,
+.sort-label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.filter-select,
+.sort-select {
+  width: 100%;
+}</style>
+

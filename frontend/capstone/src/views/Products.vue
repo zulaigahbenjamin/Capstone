@@ -78,3 +78,13 @@ export default {
   },
 };
 </script>
+<style>
+.form-control {
+  width:20px; 
+}
+.tem {
+ 
+  background-color: rgba(220, 164, 125, 1);
+
+}
+</style>
