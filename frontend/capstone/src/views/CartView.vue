@@ -1,8 +1,8 @@
 <!-- Example cart component template -->
 <template>
-  <div>
-    <h2>Cart</h2>
-    <ul>
+  <div class="back">
+    <h2 class="back">Cart</h2>
+    <ul class="back">
       <li v-for="(product, index) in $store.state.cart" :key="index, product">
         <h3>{{ product.prodName }}</h3>
         <img :src="product.prodUrl" alt="Product Image" />
@@ -31,3 +31,9 @@ export default {
   },
 };
 </script>
+<style scoped>
+.back {
+  background-color: rgb(248, 248, 212);
+  height: 100vh;
+}
+</style>

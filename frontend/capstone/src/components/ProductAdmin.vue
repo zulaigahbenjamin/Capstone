@@ -1,6 +1,6 @@
 <template>
     <tr class="table-row">
-      <th class="table-head text-black">{{ product.prodId}}</th>
+      <th class="table-head text-black"> {{product.prodId}}</th>
      
       <td class="text-black ml-2">{{ product.prodName }}</td>
       <td class="text-black">{{ product.quantity }}</td>

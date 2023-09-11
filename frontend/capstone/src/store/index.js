@@ -239,7 +239,7 @@ export default createStore({
     },
     
     async getCart(context, id) {
-      const res = await axios.get(`${URL}users/${id}/cart`);
+      const res = await axios.get(`${apiUrl}users/${id}/cart`);
       context.commit("setCart", res.data);
       console.log(id);
     },

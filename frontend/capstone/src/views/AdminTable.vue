@@ -89,20 +89,20 @@ export default {
 }
 
 .container {
-  background-color: rgba(245, 245, 220, 1);
+  background-color: rgb(248, 248, 212);
   color: black;
   text-decoration-color: black;
   text-align: center;
-  margin: 0 auto; /* Center the container horizontally */
-  max-width: 100%; /* Set the maximum width */
+  margin: 0 auto; 
+  max-width: 100%;
   padding: 10px;
-  padding:20px; /* Add some padding for spacing */
+  padding:20px; 
 }
 @media (max-width: 300px) {
   .table-header {
     max-width: 100%;
     display:grid;
-    grid-template-columns: auto; /* Allow the container to expand to the full viewport width */
+    grid-template-columns: auto; 
   }
   
 }

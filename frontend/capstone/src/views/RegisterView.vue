@@ -131,6 +131,7 @@ h1 {
 
 .form-control {
   width: 100%;
-}</style>
+}
+</style>
   
  

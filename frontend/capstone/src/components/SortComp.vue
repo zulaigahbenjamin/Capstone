@@ -155,7 +155,7 @@ export default {
 
 <style scoped>
 .color {
-  background-color: rgba(220, 164, 125, 1);
+ background-color: rgb(248, 248, 212);
 }
 /* Custom styling for coffee shop cards */
 .coffee-card {

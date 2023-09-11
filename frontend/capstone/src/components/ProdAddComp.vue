@@ -1,32 +1,67 @@
 <template>
   <div>
     <div class="containers ">
+      <label>Product ID</label>
+      <input type="text" autocomplete="no" required name="prodId" v-model="prodId"/>
+    <br/>
+
       <label>Name</label><br/>
       <input type="text" autocomplete="on" required name="prodName" v-model="prodName" />
       <br/>
       <label>Quantity</label>
       <input type="text" autocomplete="ofn" required name="quantity" v-model="quantity" />
+      <br/>
       <label>Price</label>
       <input type="number" autocomplete="off" required name="amount" v-model="amount" />
+      <br/>
       <label>Category</label>
       <input type="text" autocomplete="off" required name="category" v-model="category" />
+      <br/>
       <label>Image</label>
       <input type="text" autocomplete="off" required name="prodUrl" v-model="prodUrl" />
-      <!-- <label>Description</label>
-  
-        <input
-          type="text"
-          autocomplete="off"
-          required
-          name="description"
-          v-model="description"
-        /> -->
+      <br/>
+
 
       <button @click="addProduct" class="btn-submit">Submit</button>
     </div>
   </div>
 </template>
+
 <script>
+import axios from "axios";
+export default {
+
+ 
+  data() {
+    return {
+      model: {
+        product: {
+          prodId: '', 
+          prodName: '',
+          quantity: '',
+          amount: '',
+          category: '',
+          prodUrl: '',
+        }
+      }
+    };
+  },
+  methods: {
+    addProduct() {
+      axios.post("https://zulaigahcapstoneapi.onrender.com/products", this.model.product)
+        .then(response => {
+          console.log("Product added:", response.data);
+
+        })
+        .catch(error => {
+          console.error("Error adding product:", error);
+          alert("An error occurred while adding the product.");
+        });
+    },
+  }
+};
+</script>
+<!-- <script>
 import axios from "axios";
 export default {
   data() {
@@ -43,6 +78,7 @@ export default {
     async addProduct() {
       try {
         await axios.post("https://zulaigahcapstoneapi.onrender.com/products", {
+          prodId: this.prodId,
           prodName: this.prodName,
           quantity: this.quantity,
           amount: this.amount,
@@ -50,8 +86,8 @@ export default {
           prodUrl: this.prodUrl,
           // description: this.description,
         });
-
-        this.productName = "";
+        this.prodId= "";
+        this.prodName = "";
         this.quantity = "";
         this.amount = "";
         this.category = "";
@@ -65,8 +101,8 @@ export default {
       }
     },
   },
-};
-</script>
+}; -->
+<!-- </script> -->
   
 <style scoped>
 label {

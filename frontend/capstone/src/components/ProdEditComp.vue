@@ -72,7 +72,7 @@ export default {
         this.amount = "";
         this.category = "";
         this.prodUrl = "";
-        //   this.description = "";
+        
 
         this.$router.push("/admin");
         alert("Product has been updated");

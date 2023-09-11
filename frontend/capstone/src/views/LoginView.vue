@@ -1,43 +1,9 @@
-<!-- <template>
-  <div class="container d-flex p-4">
-    <div class="col-6">
-      <img />
-    </div>
-
-    <div class="col-6 login-field">
-      <h1 class="text">WELCOME BACK !</h1>
-
-      <form @submit.prevent="userLogin">
-        <div>
-          <div class="fas fa-envelope"></div>
-          <label for="email" class="text-start">ENTER YOUR EMAIL</label>
-
-          <input type="email" name="email" v-model="emailAddress" placeholder="eg. zulaigahbenjamin09@gmail.com" />
-
-        </div>
-        <div>
-          <div class="fas fa-lock"></div>
-          <label for="password" class="text-start">PASSWORD</label>
-          <input type="password" v-model="userPwd" name="password" />
-        </div>
-        <button type="submit">Log In</button>
-        <p>
-          Dont have an account?
-          <button class="link"><router-link to="/register"
-              class="register-link text-decoration-none text-white">Register</router-link></button>
-        </p>
-      </form>
-    </div>
- 
-  </div>
- 
-</template> -->
-
 <template>
+  <div class="back"></div>
   <div class="container d-flex p-4">
     <div class="col-6 coffee-image">
       <!-- Your coffee shop image goes here -->
-      <img src="https://i.postimg.cc/1t65yHfR/Untitled-design-19-1600x.webp" alt="Coffee Shop" />
+      <img src="https://i.postimg.cc/Bv2xR4xQ/3bb7c5ab569f87460cbc8aa3f73c2c97.jpg " alt="Coffee Shop" />
     </div>
 
     <div class="col-6 login-field">
