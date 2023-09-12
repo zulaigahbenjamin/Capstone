@@ -33,6 +33,9 @@
               <router-link to="/admin">User</router-link>
             </li>
             <li id="fade-in">
+              <router-link to="/checkout">Checkout</router-link>
+            </li>
+            <li id="fade-in">
               <router-link to="/cart"><i class="fa-solid fa-cart-shopping fa-lg" style="color: #000000;"></i></router-link>
             </li>
             <li id="fade-in">

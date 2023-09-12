@@ -82,7 +82,7 @@ export default {
   methods: {
     async register() {
       try {
-        const resp = await this.$store.dispatch("register", {
+        const resp = await this.$store.dispatch("setRegistrationStatus", {
           firstName: this.firstName,
           lastName: this.lastName,
           userAge: this.userAge,
@@ -108,7 +108,9 @@ export default {
 
         this.$router.push("/login");
       } catch (e) {
+    console.error("Registration error: ", e);
         console.error("Registration error: ", e);
+        this.registrationError = "An unexpected error occurred. Please try again later.";
       }
     },
   },

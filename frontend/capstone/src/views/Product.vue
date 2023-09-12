@@ -2,12 +2,12 @@
   <div>
     <div class="container-fluid">
       <div class="row gap-3 justify-content-center">
-        <div class="card" v-if="product">
-          <img :src="product.prodUrl" class="card-img-top" style="padding: 1.6rem" height="550" />
+        <div class="card" v-if="products">
+          <img :src="products.prodUrl" class="card-img-top" style="padding: 1.6rem" height="550" />
           <div class="card-body justify-content-center">
-            <h5 class="card-title">{{ product.prodName }}</h5>
-            <p class="card-text">{{ product.category }}</p>
-            <p class="card-text">R {{ product.amount }}</p>
+            <h5 class="card-title">{{ products.prodName }}</h5>
+            <p class="card-text">{{ products.category }}</p>
+            <p class="card-text">R {{ products.amount }}</p>
             <router-link class="btn" to="/products">Go Back</router-link>
           </div>
         </div>

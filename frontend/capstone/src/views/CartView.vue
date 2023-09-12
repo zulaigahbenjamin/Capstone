@@ -1,39 +1,96 @@
-<!-- Example cart component template -->
 <template>
-  <div class="back">
-    <h2 class="back">Cart</h2>
-    <ul class="back">
-      <li v-for="(product, index) in $store.state.cart" :key="index, product">
-        <h3>{{ product.prodName }}</h3>
-        <img :src="product.prodUrl" alt="Product Image" />
-        <p>Quantity: {{ product.quantity }}</p>
-        <p>Price: R {{ product.amount }}</p>
+  <div class="container">
+    <h1>YOUR ITEMS</h1>
+    <table v-if="products && products.length > 0">
+      <tr>
+        <td colspan="4">Your cart is empty.</td>
+      </tr>
+    </table>
+    <table v-else>
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="product in getCart" :key="product.prodID">
+          <td><img :src="product.prodUrl" alt="" class="w-25" /></td>
+          <td>{{ product.prodName }}</td>
+          <td>R{{ product.amount }}</td>
+          <td>{{ product.quantity }}</td>
+          <td>
+            <button @click="removeFromCart(product.cartID)">Remove</button>
+          </td>
+        </tr>
+      </tbody>
 
-      </li>
-    </ul>
+      <button>
+        <router-link to="/checkout" class="text-white text-decoration-none"
+          >Checkout</router-link
+        >
+      </button>
+    </table>
   </div>
 </template>
 
-
 <script>
 export default {
+  Name: "setCart",
   computed: {
-    cart() {
-      this.$store.dispatch("addProductToCart", productObject);
+    getCart() {
+      console.log(this.$store.state.cart);
+      return this.$store.state.cart;
+    },
+    user() {
+      return this.$store.state.userData;
+    },
+    cartTotalPrice() {
+      return this.$store.getters.cartTotalPrice;
     },
   },
+
+  mounted() {
+    this.$store.dispatch("getCart", this.user.userID);
+  },
   methods: {
-    removeProductFromCart(index) {
-      if (index >= 0 && index < this.cart.length) {
-        this.$store.commit("removeProductFromCart", index);
-      }
+    removeFromCart(cartID) {
+      const userID = this.user.userID;
+
+      this.$store
+        .dispatch("removeFromCart", { userID, cartID })
+        .then(() => {})
+        .catch((error) => {
+          console.error("Error removing item from cart:", error);
+        });
     },
   },
 };
 </script>
 <style scoped>
-.back {
-  background-color: rgb(248, 248, 212);
-  height: 100vh;
+.container {
+  height: 80vh;
+}
+th {
+  color: white;
+}
+td {
+  color: white;
+}
+button {
+  width: 10em;
+  position: relative;
+  height: 3.5em;
+  border: 3px ridge var(--secondary-color);
+  outline: none;
+  background-color: transparent;
+  color: white;
+  transition: 1s;
+  border-radius: 0.3em;
+  font-size: 16px;
+  margin: 14px;
 }
 </style>

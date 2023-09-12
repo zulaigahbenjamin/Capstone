@@ -1,8 +1,7 @@
 import { createStore } from "vuex";
-
+import axios from 'axios'
 const apiUrl = 'https://zulaigahcapstoneapi.onrender.com/';
 
-import axios from "axios";
 import Cookies from "js-cookie";
 export default createStore({
   state: {
@@ -15,7 +14,7 @@ export default createStore({
     userRole: null,
     msg: null,
     error: null,
-    regStatus: null,
+    setRegistrationStatus: null,
     logStatus: null,
     cart: [],
     addProductToCart: null,
@@ -41,8 +40,8 @@ export default createStore({
     setUser: (state, user) => {
       state.user = user;
     },
-    setRegStatus(state, status) {
-      state.regStatus = status;
+    setRegistrationStatus(state, status) {
+      state.registrationStatus = status;
     },
     setLogStatus(state, status) {
       state.logStatus = status;
@@ -89,7 +88,12 @@ export default createStore({
         return product.category === selectedCategory || selectedCategory === "all";
       });
     },
-
+   addProduct(state, product) {
+      state.products.push(product); 
+    },
+    updateUser: (state, updatedUser) => {
+      state.user = updatedUser;
+    },
 
     clearCart(state) {
       state.cartItems = [];
@@ -106,9 +110,9 @@ export default createStore({
       }
     },
 
-    getUser: async (context, id) => {
+    getUser: async (context, userId) => {
       try {
-        const res = await fetch(`${apiUrl}users/${id}`);
+        const res = await fetch(`${apiUrl}user/${userId}`);
         if (!res.ok) {
           throw new Error("Failed to fetch user by ID");
         }
@@ -139,36 +143,30 @@ export default createStore({
       }
     },
 
-    async register(context, payload) {
-      console.log("Reached");
+    async register({ commit }, userData) {
       try {
-        const res = await axios.post(`${apiUrl}users`, payload);
-        console.log("Res: ", res.data);
-        const { msg, err, token } = res.data;
-
-        if (msg === "An error occured") {
-          context.commit("setError", msg);
-          context.commit("setRegStatus", "Not registered");
-          return { success: false, error: msg };
-        } else if (token) {
-          context.commit("setToken", token);
-          context.commit("setRegStatus", "Registered successfully");
+        const response = await axios.post(`${apiUrl}register`, userData);
+        const { msg, token } = response.data;
+  
+        if (token) {
+          commit('setRegistrationStatus', 'Registered successfully');
           return { success: true, token };
-        } else if (err) {
-          console.error(err);
+        } else if (msg === 'An error occurred') {
+          commit('setError', msg);
+          commit('setRegistrationStatus', 'Not registered');
+          return { success: false, error: msg };
         }
-      } catch (e) {
-        context.commit("setError", e);
-        console.log(e);
-        context.commit("setRegStatus", "Not registered");
-        throw e;
+      } catch (error) {
+        commit('setError', error.message);
+        commit('setRegistrationStatus', 'Not registered');
+        throw error;
       }
     },
 
-
+    
     async login(context, payload) {
       try {
-        const res = await axios.post(`${apiUrl}users/login`, payload);
+        const res = await axios.post(`${apiUrl}login`, payload);
         const { msg, err, token, userData } = res.data;
         if (msg === "You are providing the wrong email or password") {
           console.log(msg);
@@ -179,8 +177,6 @@ export default createStore({
         if (token) {
           // Save the token in local storage
           localStorage.setItem("userToken", token);
-
-          // Save the user data in local storage
           localStorage.setItem("userData", JSON.stringify(userData));
 
           context.commit("setUser", userData);
@@ -239,12 +235,13 @@ export default createStore({
     },
     
     async getCart(context, id) {
-      const res = await axios.get(`${apiUrl}users/${id}/cart`);
+      const res = await axios.get(`${apiUrl}orders/${id}/cart`);
       context.commit("setCart", res.data);
       console.log(id);
     },
 
-    async addProductToCart({ commit }, { userId, prodId }) {
+   
+    async addProductToCart(context, { userId, prodId }) {
       try {
         const response = await axios.post(`${apiUrl}users/${userId}/cart`, {
           userId,
@@ -252,25 +249,126 @@ export default createStore({
         });
 
         if (response.status === 200) {
-          commit("addProductToCart", response.data); // Assuming the response contains the added product
-        } else {
+          context.commit("addToCart", response.data);
         }
       } catch (error) {
-        console.error(error);
-       
+        console.error("Error adding product to cart:", error);
+        throw error;
       }
     },
 
 
-    async removeFromCart({ commit }, { userId, cartId }) {
+
+    async removeProductFromCart(context, { userId, cartId }) {
       try {
         await axios.delete(`${apiUrl}users/${userId}/cart/${cartId}`);
 
-        commit("removeFromCart", cartId);
+        context.commit("removeFromCart", cartID);
       } catch (error) {
-        console.error(error);
+        console.error("Error removing product from cart:", error);
+        throw error;
       }
     },
+  },
+  async clearCart({ commit }, { userId }) {
+    try {
+      await axios.delete(`${apiUrl}users/${userId}/cart`);
+      commit("clearCart", userId);
+    } catch (error) {
+      console.error(error);
+    }
+  },
+
+
+  //crud
+  
+  async deleteUser(context, id) {
+    try {
+      // Send a DELETE request to delete the user
+      const response = await axios.delete(`${apiUrl}users/${id}`);
+
+      if (response.status === 204) {
+        // User deleted successfully
+        context.commit("setUser", null); // Clear the user data in the store
+        console.log("User deleted successfully");
+      } else {
+        // Handle other response statuses or errors
+        console.error("Failed to delete user");
+      }
+    } catch (error) {
+      console.error(error);
+      // Handle network errors or other exceptions
+    }
+  },
+
+  //update user
+  async updateUser(context, payload) {
+    try {
+      const { res } = await axios.put(
+        `${apiUrl}users/${payload.userID}`,
+        payload
+      );
+      const { msg, err } = res.data;
+      if (msg) {
+        context.commit("setUser", msg);
+      }
+      if (err) {
+        context.commit("setMsg", err);
+      }
+    } catch (e) {
+      context.commit("setMsg", "an error occured");
+    }
+  },
+
+  //add product
+  addProduct: async (context, payload) => {
+    try {
+      const res = await axios.post(`${apiUrl}products`, payload);
+      if (res.status !== 200) {
+        throw new Error("Failed to add product");
+      }
+
+      const product = res.data;
+      context.commit("addProduct");
+      context.commit("SET_PRODUCT", product);
+    } catch (error) {
+      console.error(error);
+    }
+  },
+  async updateProduct(context, payload) {
+    try {
+      const { res } = await axios.put(
+        `${apiUrl}products/${payload.prodID}`,
+        payload
+      );
+      const { msg, err } = res.data;
+      if (msg) {
+        context.commit("SET_PRODUCT", msg);
+      }
+      if (err) {
+        context.commit("setMsg", err);
+      }
+    } catch (e) {
+      context.commit("setMsg", "an error occured");
+    }
+  },
+  async deleteProduct(context, prodId) {
+    try {
+      // Send a DELETE request to delete the user
+      const response = await axios.delete(`${apiUrl}product/${prodId}`);
+
+      if (response.status === 204) {
+        // User deleted successfully
+        context.commit("SET_PRODUCT", null); // Clear the user data in the store
+        console.log("Product deleted successfully");
+      } else {
+        // Handle other response statuses or errors
+        console.error("Failed to delete product");
+      }
+    } catch (error) {
+      console.error(error);
+      // Handle network errors or other exceptions
+    }
   },
   modules: {},
 });

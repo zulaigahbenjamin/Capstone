@@ -30,35 +30,35 @@
 <script>
 import axios from "axios";
 export default {
-
- 
   data() {
     return {
-      model: {
-        product: {
-          prodId: '', 
-          prodName: '',
-          quantity: '',
-          amount: '',
-          category: '',
-          prodUrl: '',
-        }
-      }
+      prodName: "",
+      quantity: "",
+      amount: "",
+      category: "",
+      prodURL: "https://i.postimg.cc/43GzNPSc/img1.jpg",
+   
     };
   },
   methods: {
-    addProduct() {
-      axios.post("https://zulaigahcapstoneapi.onrender.com/products", this.model.product)
-        .then(response => {
-          console.log("Product added:", response.data);
-
-        })
-        .catch(error => {
-          console.error("Error adding product:", error);
-          alert("An error occurred while adding the product.");
+    async addProduct() {
+      try {
+        this.$store.dispatch("addProduct", {
+          prodName: this.prodName,
+          quantity: this.quantity,
+          amount: this.amount,
+          category: this.category,
+          prodURL: this.prodURL,
+      
         });
+
+        this.$router.push("/admin");
+        alert("Product has been created");
+      } catch (err) {
+        alert(err);
+      }
     },
-  }
+  },
 };
 </script>
 <!-- <script>

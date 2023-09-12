@@ -71,6 +71,12 @@ const routes = [
     component: () => import ('../views/CartView.vue')
   },
   {
+    path: "/admin/products/:id",
+    name: "product-edit",
+    component: () => import("../views/ProdEdit.vue"),
+    props: true,
+  },
+  {
     path: '/admin',
     name: 'admin',
     component: () => import ('../views/AdminTable.vue')
@@ -87,7 +93,12 @@ const routes = [
     component: () => import("../views/RegisterView.vue"),
     props: true,
   },
-
+  {
+    path: "/checkout",
+    name: "rcheckout",
+    component: () => import("../views/checkoutView.vue"),
+    
+  },
 
 ]
 

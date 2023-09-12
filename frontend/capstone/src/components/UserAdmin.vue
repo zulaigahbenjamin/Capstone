@@ -26,22 +26,28 @@
   </template>
   
   <script>
-  import axios from "axios";
+  // import axios from "axios";
   
   export default {
     props: ["user"],
-    methods: {
-      async deleteUser(id) {
-        try {
-          await axios.delete(`https://zulaigahcapstoneapi.onrender.com/users/${id}`);
-          this.$store.dispatch("getUsers");
-          alert("User has been deleted");
-        } catch (err) {
-          alert(err);
-        }
-      },
+  mounted() {
+    this.$store.dispatch("getUsers");
+  },
+  methods: {
+    async deleteUser(id) {
+      try {
+        await this.$store.dispatch("deleteUser", id);
+        alert("User deleted successfully");
+        // If the delete operation is successful, you can add any necessary code here.
+      } catch (error) {
+        // Handle the error here, for example, display an error message.
+        alert("Error deleting user");
+        console.error("Error deleting user:", error);
+      }
     },
-  };
+  },
+};
+ 
   </script>
   
   <style scoped>
