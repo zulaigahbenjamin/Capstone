@@ -1,7 +1,13 @@
 const db = require('../config/config.js')
 const { hash, compare } = require('bcrypt')
-const { tokenCreated } = require('../middleware/AuthenticateUser.js')
-const bcrypt = require('bcrypt')
+
+const bcrypt = require('bcrypt');
+const { createToken } = require('../middleware/AuthenticateUser.js'); 
+
+
+
+
+
 
 class users {
     fetchUsers = (req, res) => {
@@ -33,43 +39,49 @@ class users {
     }
 
     login(req, res) {
-        const { emailAddress, userPwd } = req.body
-        const query = `
-        SELECT  userId, firstName, lastName, userAge, gender, userRole, emailAddress, userPwd
-        FROM users
-        WHERE emailAddress = '${emailAddress}';
-        `
+        const { emailAddress, userPwd } = req.body;
+        const query = `SELECT emailAddress, userPwd
+            FROM users
+            WHERE emailAddress = '${emailAddress}';`;
         db.query(query, async (err, result) => {
-            if (err) throw err
-            if (!result?.length) {
+          if (err) throw err;
+          if (!result?.length) {
+            res.json({
+              status: res.statusCode,
+              msg: "You provided the wrong email",
+            });
+          } else {
+            await compare(userPwd, result[0].userPwd, (cErr, cResult) => {
+              if (cErr) throw cErr;
+              //create token
+              const token = createToken({
+                emailAddress,
+                userPwd,
+              });
+              //save a token
+              res.cookie("legitUser", token, {
+                maxAge: 120,
+                httpOnly: true,
+              });
+              if (cResult) {
                 res.json({
-                    status: res.statusCode,
-                    msg: "You provided a wrong email."
-                })
-            } else {
-                await compare(userPwd, result[0].userPwd, (compErr, compResult) => {
-                    if (compErr) throw compErr
-                    let token = tokenCreated({
-                        emailAddress,
-                        userPwd
-                    })
-                    if (compResult) {
-                        res.json({
-                            msg: "You have logged in",
-                            token,
-                            result: result[0]
-                        })
-                    } else {
-                        res.json({
-                            status: res.statusCode,
-                            msg: "Invalid password or check if you have registered"
-                        })
-                    }
-                })
-            }
-        })
-    }
-
+                  msg: "Logged in",
+                  token,
+                  result: result[0],
+                });
+              } else {
+                res.json({
+                  status: res.statusCode,
+                  msg: "Invalid password or you didn't register",
+                });
+              }
+            });
+          }
+        });
+      }
+    
+    
+   
     async register(req, res) {
         const data = req.body
         data.userPwd = await hash(data.userPwd, 15)

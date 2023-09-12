@@ -13,7 +13,8 @@ routes.get('/user/:id',(req,res)=>{
 routes.post('/register',bodyParser.json(), (req, res)=>{
     users.register(req, res)
 });
-routes.post('/login', (req, res)=>{
+routes.post('/login',bodyParser.json(),
+ (req, res)=>{
     users.login(req, res)
 });
 
@@ -25,23 +26,28 @@ routes.delete('/user/:id',(req,res)=>{
 })
 
 
-// //====Routes for orders=====
-// routes.get('/user/:id/orders',(req,res)=>{
-//     orders.getOrderByUser(req,res)
-// })
 
-// routes.patch('/user/:id/order/:id',bodyParser.json(),(req,res)=>{
-//     orders.updateOrders(req,res)
-// })
-// routes.delete('/user/:id/orders',(req,res)=>{
-//     orders.deleteOrders(req,res)
-// })
-// routes.delete('/user/:id/order/:id',(req,res)=>{
-//     orders.deleteOrder(req,res)
-// })
-// routes.post('/user/:id/order',bodyParser.json(),(req,res)=>{
-//     orders.addOrders(req,res)
-// })
+
+//====Routes for orders=====
+routes.get('/user/:id/orders',(req,res)=>{
+    orders.getOrderByUser(req,res)
+})
+
+routes.patch('/user/:id/order/:id',bodyParser.json(),(req,res)=>{
+    orders.updateOrders(req,res)
+})
+routes.delete('/user/:id/orders',(req,res)=>{
+    orders.deleteOrders(req,res)
+})
+routes.delete('/user/:id/order/:id',(req,res)=>{
+    orders.deleteOrder(req,res)
+})
+routes.post('/user/:id/order',bodyParser.json(),(req,res)=>{
+    orders.addOrders(req,res)
+})
+
+
+
 
 //====Routes for products=====
 routes.get('/products',(req,res)=>{
@@ -50,8 +56,8 @@ routes.get('/products',(req,res)=>{
 routes.get('/product/:id',(req,res)=>{
     product.getProduct(req,res)
 })
-routes.patch('/product/:id',bodyParser.json(),(req,res)=>{
-    products.updateProduct(req,res)
+routes.post('/product',bodyParser.json(),(req,res)=>{
+    product.addProduct(req,res)
 })
 routes.delete('/product/:id',(req,res)=>{
     product.deleteProduct(req,res)

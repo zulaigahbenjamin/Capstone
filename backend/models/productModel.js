@@ -43,6 +43,8 @@ class Products{
             })
         })
     }
+
+    
     updateProduct(req,res){
         const data = req.body
        
