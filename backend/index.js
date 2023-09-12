@@ -8,14 +8,14 @@ const errorHandler =require('./middleware/errorHandeling.js')
 
 
 app.use((req, res, next) => {
-   res.header('Access-Control-Allow-Origin', 'http://localhost:80810', 'http://localhost:3302');
+    res.header('Access-Control-Allow-Origin', ['http://localhost:8080', 'http://localhost:3302']);
     res.header("Access-Control-Allow-Credentials", "true");
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH');
-    res.header("Access-Control-Request-Methods", "*");
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     res.header("Access-Control-Expose-Headers", "Authorization");
     next();
-})
+ });
+ 
 app.use(
     express.static('./static'),
     express.urlencoded({
