@@ -131,6 +131,7 @@ class users {
             })
         })
     }
+    
 }
 
 module.exports = users
