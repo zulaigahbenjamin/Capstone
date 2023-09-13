@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1>YOUR ITEMS</h1>
+    <h1>Whats In Your Bag</h1>
     <table v-if="products && products.length > 0">
       <tr>
         <td colspan="4">Your cart is empty.</td>
@@ -17,13 +17,13 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="product in getCart" :key="product.prodID">
+        <tr v-for="product in getCart" :key="product.prodId">
           <td><img :src="product.prodUrl" alt="" class="w-25" /></td>
           <td>{{ product.prodName }}</td>
           <td>R{{ product.amount }}</td>
           <td>{{ product.quantity }}</td>
           <td>
-            <button @click="removeFromCart(product.cartID)">Remove</button>
+            <button @click="removeFromCart(product.cartId)">Remove</button>
           </td>
         </tr>
       </tbody>
@@ -54,14 +54,14 @@ export default {
   },
 
   mounted() {
-    this.$store.dispatch("getCart", this.user.userID);
+    this.$store.dispatch("getCart", this.user.userId);
   },
   methods: {
-    removeFromCart(cartID) {
-      const userID = this.user.userID;
+    removeFromCart(cartId) {
+      const userId = this.user.userId;
 
       this.$store
-        .dispatch("removeFromCart", { userID, cartID })
+        .dispatch("removeFromCart", { userId, cartId })
         .then(() => {})
         .catch((error) => {
           console.error("Error removing item from cart:", error);

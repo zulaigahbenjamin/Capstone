@@ -147,7 +147,7 @@
       },
     },
     mounted() {
-      this.$store.dispatch("getUser", this.id), this.$store.dispatch("getUsers");
+      this.$store.dispatch("setUser", this.id), this.$store.dispatch("getUsers");
     },
   };
   </script>

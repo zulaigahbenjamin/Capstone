@@ -21,10 +21,7 @@
             <input type="text" class="form-control" placeholder="eg. Admin" v-model="userRole" required
               style="border:2px solid pink;" />
           </div>
-          <!-- <div class="col-12">
-            <label for="text" class="form-label" style="float:left;" >Profile URL</label>
-            <input type="text" class="form-control" placeholder="" v-model="userProfile" required style="border:2px solid pink;"/>
-          </div> -->
+    
           <div class="col-12">
             <label for="gender" class="form-label" style="float:left;">Gender:</label>
             <input type="gender" class="form-control" placeholder="eg. Female" v-model="gender" required
@@ -45,7 +42,7 @@
             <input type="password" class="form-control" v-model="userPwd" required style="border:2px solid pink;" />
           </div>
           <div class="col-12">
-            <button class="btn" type="submit">Sign Up</button>
+            <button class="btn" type="submit" @click="AddUser()">Sign Up</button>
           </div>
         </form>
         <router-link to="/login" class="register-link text-decoration-none text-white">
@@ -69,6 +66,7 @@ import Swal from "sweetalert2";
 export default {
   data() {
     return {
+      userId: 0,
       firstName: "",
       lastName: "",
       userAge: "",
@@ -80,40 +78,17 @@ export default {
     };
   },
   methods: {
-    async register() {
-      try {
-        const resp = await this.$store.dispatch("setRegistrationStatus", {
-          firstName: this.firstName,
-          lastName: this.lastName,
-          userAge: this.userAge,
-          gender: this.gender,
-          userRole: this.userRole,
-          emailAddress: this.emailAddress,
-          userPwd: this.userPwd,
-
-        });
-        if (resp && resp.success) {
-          await Swal.fire({
-            icon: "success",
-            title: "Registration successful",
-            text: "CONGRATULATIONS, YOU ARE NOW REGISTERED! Please Login",
-          });
-        } else {
-          await Swal.fire({
-            icon: "error",
-            title: "Registration failed",
-            text: resp && resp.error ? resp.error : "Unexpected error",
-          });
+        AddUser() {
+            const success = this.$store.dispatch("Register", this.newUser);
+            if (success) {
+                alert("Success")
+                this.$router.push("/login")
+            }
+            else {
+                alert("Unable to add user")
+            }
         }
-
-        this.$router.push("/login");
-      } catch (e) {
-    console.error("Registration error: ", e);
-        console.error("Registration error: ", e);
-        this.registrationError = "An unexpected error occurred. Please try again later.";
-      }
-    },
-  },
+    }
 };
 </script>
 <style>

@@ -17,7 +17,9 @@ export default createStore({
     setRegistrationStatus: null,
     logStatus: null,
     cart: [],
-    addProductToCart: null,
+    logStatus: null,
+    // addProductToCart: null,
+    // addProduct: null,
   },
 
   getters: {
@@ -41,7 +43,7 @@ export default createStore({
       state.user = user;
     },
     setRegistrationStatus(state, status) {
-      state.registrationStatus = status;
+      state.setRegistrationStatus = status;
     },
     setLogStatus(state, status) {
       state.logStatus = status;
@@ -80,22 +82,23 @@ export default createStore({
     addProductToCart(state, product) {
       state.cart.push(product);
     },
-    removeProductFromCart(state, prodId) {
-      state.cart = state.cart.filter((product) => product.prodId !== prodId);
+
+    removeFromCart(state, cartID) {
+      // Remove the item from the cart state
+      state.cart = state.cart.filter((cart) => cart.cartID !== cartID);
     },
+
     setFilteredProducts(state, selectedCategory) { // Mutation to set filteredProducts
       state.filteredProducts = state.products.filter((product) => {
         return product.category === selectedCategory || selectedCategory === "all";
       });
     },
-   addProduct(state, product) {
-      state.products.push(product); 
-    },
+ 
     updateUser: (state, updatedUser) => {
       state.user = updatedUser;
     },
 
-    clearCart(state) {
+     clearCart(state) {
       state.cartItems = [];
     },
   },
@@ -133,92 +136,131 @@ export default createStore({
         alert(error.message);
       }
     },
-    async fetchProduct(context, prodId) {
+
+    async fetchProducts(context, prodId) {
       try {
         let response = await fetch(`${apiUrl}product/${prodId}`);
-        let {result} = await response.json();
-        context.commit("SET_PRODUCT", result[0]);
+        let { results } = await response.json();
+        context.commit("SET_PRODUCT", results);
       } catch (error) {
         alert(error.message);
       }
     },
+    
 
-    async register({ commit }, userData) {
+   
+    
+    async Register(context, newUser) {
       try {
-        const response = await axios.post(`${apiUrl}register`, userData);
-        const { msg, token } = response.data;
-  
-        if (token) {
-          commit('setRegistrationStatus', 'Registered successfully');
-          return { success: true, token };
-        } else if (msg === 'An error occurred') {
-          commit('setError', msg);
-          commit('setRegistrationStatus', 'Not registered');
-          return { success: false, error: msg };
+        const response = await axios.post(`${apiUrl}register`, newUser)
+        if (response) {
+          context.commit("setUsers", response.data);
         }
-      } catch (error) {
-        commit('setError', error.message);
-        commit('setRegistrationStatus', 'Not registered');
-        throw error;
+        else {
+          alert('Post was unsuccessful')
+        }
+      }
+      catch (err) {
+        console.error(err);
+      } 
+    },
+
+    // async register({ commit }, userData) {
+    //   try {
+    //     const response = await axios.post(`${apiUrl}register`, userData);
+    //     const { msg, token } = response.data;
+  
+    //     if (token) {
+    //       commit('setRegistrationStatus', 'Registered successfully');
+    //       return { success: true, token };
+    //     } else if (msg === 'An error occurred') {
+    //       commit('setError', msg);
+    //       commit('setRegistrationStatus', 'Not registered');
+    //       return { success: false, error: msg };
+    //     }
+    //   } catch (error) {
+    //     commit('setError', error.message);
+    //     commit('setRegistrationStatus', 'Not registered');
+    //     throw error;
+    //   }
+    // },
+    async login({ commit }, { email, password }) {
+      try {
+        const response = await axios.post(`${apiUrl}login`, { emailAddress: email, userPwd: password });
+
+        if (response.data.token) {
+          const token = response.data.token;
+          const userData = response.data.result;
+
+          commit('setToken', token);
+          commit('setUserData', userData);
+
+          // Redirect to the dashboard or another page after successful login
+        } else {
+          alert('Login failed. Please check your credentials.');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('An error occurred during login.');
       }
     },
 
     
-    async login(context, payload) {
-      try {
-        const res = await axios.post(`${apiUrl}login`, payload);
-        const { msg, err, token, userData } = res.data;
-        if (msg === "You are providing the wrong email or password") {
-          console.log(msg);
-          context.commit("setError", msg);
-          context.commit("setLogStatus", "Not logged in");
-          return { success: false, error: msg };
-        }
-        if (token) {
-          // Save the token in local storage
-          localStorage.setItem("userToken", token);
-          localStorage.setItem("userData", JSON.stringify(userData));
+    // async login(context, payload) {
+    //   try {
+    //     const res = await axios.post(`${apiUrl}login`, payload);
+    //     const { msg, err, token, userData } = res.data;
+    //     if (msg === "You are providing the wrong email or password") {
+    //       console.log(msg);
+    //       context.commit("setError", msg);
+    //       context.commit("setLogStatus", "Not logged in");
+    //       return { success: false, error: msg };
+    //     }
+    //     if (token) {
+    //       // Save the token in local storage
+    //       localStorage.setItem("userToken", token);
+    //       localStorage.setItem("userData", JSON.stringify(userData));
 
-          context.commit("setUser", userData);
-          context.commit("setToken", token);
+    //       context.commit("setUser", userData);
+    //       context.commit("setToken", token);
 
-          // Log user details here
-          console.log("User logged in:", userData);
+    //       // Log user details here
+    //       console.log("User logged in:", userData);
 
-          context.commit("setLogStatus", res.data.message);
+    //       context.commit("setLogStatus", res.data.message);
 
-          return { success: res.data.success, token };
-        } else if (err) {
-          context.commit("setToken", null);
-          context.commit("setError", err);
-          return { success: false, error: err };
-        } else {
-          context.commit("setError", "Unknown error during login");
-          context.commit("setLogStatus", "not logged in");
-          return { success: false, error: "Unknown error" };
-        }
-      } catch (err) {
-        if (err.resp) {
-          console.error(
-            "Server gave an error: ",
-            err.resp.status,
-            err.resp.data
-          );
-        } else if (err.req) {
-          console.error(
-            "No response from the server. Check your internet connection"
-          );
-        } else {
-          console.log("An error occurred: ", err);
-        }
-        context.commit("setError", "An error occurred while trying to log in");
-        context.commit("setLogStatus", "Not logged in");
-        return { success: false, error: "Network error" };
-      }
-    },
+    //       return { success: res.data.success, token };
+    //     } else if (err) {
+    //       context.commit("setToken", null);
+    //       context.commit("setError", err);
+    //       return { success: false, error: err };
+    //     } else {
+    //       context.commit("setError", "Unknown error during login");
+    //       context.commit("setLogStatus", "not logged in");
+    //       return { success: false, error: "Unknown error" };
+    //     }
+    //   } catch (err) {
+    //     if (err.resp) {
+    //       console.error(
+    //         "Server gave an error: ",
+    //         err.resp.status,
+    //         err.resp.data
+    //       );
+    //     } else if (err.req) {
+    //       console.error(
+    //         "No response from the server. Check your internet connection"
+    //       );
+    //     } else {
+    //       console.log("An error occurred: ", err);
+    //     }
+    //     context.commit("setError", "An error occurred while trying to log in");
+    //     context.commit("setLogStatus", "Not logged in");
+    //     return { success: false, error: "Network error" };
+    //   }
+    // },
 
     cookieCheck(context) {
-      const token = Cookies.get("userToken");
+      const token = Cookies.get("userTo  ken");
       if (token) {
         context.commit("setToken", token);
       }
@@ -227,6 +269,7 @@ export default createStore({
     init(context) {
       context.dispatch("cookieCheck");
     },
+
     async logout(context) {
       context.commit("setToken", null);
       context.commit("setUser", null);
@@ -241,19 +284,40 @@ export default createStore({
     },
 
    
-    async addProductToCart(context, { userId, prodId }) {
+    // async addToCart(context, { userId, prodId }) {
+    //   try {
+    //     const response = await axios.post(`${apiUrl}users/${userId}/cart`, {
+    //       userId,
+    //       prodId,
+    //     });
+
+    //     if (response.status === 200) {
+    //      commit("addProductToCart", response.data);
+    //     }
+    //   } else {
+
+    //   }catch (error) {
+       
+    //   }
+    // },
+    async addToCart({ commit }, { userId, prodId }) {
       try {
+        // Send a POST request to your server's API endpoint
         const response = await axios.post(`${apiUrl}users/${userId}/cart`, {
           userId,
           prodId,
         });
 
+        // Handle the response as needed
         if (response.status === 200) {
-          context.commit("addToCart", response.data);
+          // The item was added to the cart successfully
+          // You can commit a mutation to update the cart in your store if needed
+          commit("addProductToCart", response.data); // Assuming the response contains the added product
+        } else {
+          // Handle other response statuses or errors
         }
       } catch (error) {
-        console.error("Error adding product to cart:", error);
-        throw error;
+        console.error(error);
       }
     },
 
@@ -263,7 +327,7 @@ export default createStore({
       try {
         await axios.delete(`${apiUrl}users/${userId}/cart/${cartId}`);
 
-        context.commit("removeFromCart", cartID);
+        context.commit("removeFromCart", cartId);
       } catch (error) {
         console.error("Error removing product from cart:", error);
         throw error;
@@ -305,7 +369,7 @@ export default createStore({
   async updateUser(context, payload) {
     try {
       const { res } = await axios.put(
-        `${apiUrl}users/${payload.userID}`,
+        `${apiUrl}users/${payload.userId}`,
         payload
       );
       const { msg, err } = res.data;
@@ -319,6 +383,7 @@ export default createStore({
       context.commit("setMsg", "an error occured");
     }
   },
+
 
   //add product
   addProduct: async (context, payload) => {
@@ -335,10 +400,12 @@ export default createStore({
       console.error(error);
     }
   },
+
+  //edit
   async updateProduct(context, payload) {
     try {
-      const { res } = await axios.put(
-        `${apiUrl}products/${payload.prodID}`,
+      const { res } = await axios.post(
+        `${apiUrl}product/${payload.prodId}`,
         payload
       );
       const { msg, err } = res.data;
@@ -352,10 +419,13 @@ export default createStore({
       context.commit("setMsg", "an error occured");
     }
   },
+
+
+  //delete
   async deleteProduct(context, prodId) {
     try {
       // Send a DELETE request to delete the user
-      const response = await axios.delete(`${apiUrl}product/${prodId}`);
+      const response = await axios.delete(`${apiUrl}products/${prodId}`);
 
       if (response.status === 204) {
         // User deleted successfully
@@ -370,5 +440,7 @@ export default createStore({
       // Handle network errors or other exceptions
     }
   },
-  modules: {},
+  modules: {
+
+  },
 });

@@ -47,9 +47,7 @@
               <router-link :to="{ name: 'product', params: { id: product.prodId } }" class="btn btn-outline btn-sm">
                 See More
               </router-link>
-              <button @click="addProductToCart(product.prodId)" class="btn btn-dark btn-sm">
-                Add to Cart
-              </button>
+           
             </div>
           </div>
         </div>
@@ -108,10 +106,7 @@ export default {
         }
       });
     },
-    addProductToCart(product) {
 
-      this.$store.dispatch("addProductToCart", product);
-    },
 
     sortProducts() {
       if (this.sortOrder === "price-high") {

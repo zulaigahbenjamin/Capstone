@@ -54,7 +54,6 @@
         v-model="product.prodUrl"
         :placeholder="product.prodUrl"
       />
-    
 
       <label for="category">Category</label>
       <input
@@ -73,17 +72,17 @@
 </template>
 
 <script>
-import axios from "axios";
+
 
 export default {
+
   data() {
     return {
       prodName: "",
       quantity: "",
       amount: "",
       category: "",
-      prodUrl: "https://i.postimg.cc/43GzNPSc/img1.jpg",
-      description: "",
+      prodURL: "https://i.postimg.cc/43GzNPSc/img1.jpg",
     };
   },
   methods: {
@@ -95,8 +94,7 @@ export default {
           quantity: this.product.quantity,
           amount: this.product.amount,
           category: this.product.category,
-          prodURL: this.product.prodUrl,
-       
+          prodUrl: this.product.prodUrl,
         };
         await this.$store.dispatch("updateProduct", payload);
         this.prodName = "";
@@ -104,7 +102,6 @@ export default {
         this.amount = "";
         this.category = "";
         this.prodUrl = "";
-      
 
         this.$router.push("/admin");
         alert("Product has been updated");
@@ -127,3 +124,35 @@ export default {
 };
 </script>
 
+<style scoped>
+label {
+  color: white;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2.5rem;
+}
+
+label {
+  font-size: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+input {
+  font-size: 1.25rem;
+  padding: 0.5rem 0 0.5rem 1rem;
+}
+
+.btn-submit {
+  margin-top: 2rem;
+  margin-left: auto;
+  padding: 0.5rem 1rem;
+  background-color: #0033ff;
+  color: #ffffff;
+  text-align: center;
+  width: fit-content;
+  border-radius: 0.2rem;
+  font-size: 1.5rem;
+}
+</style>

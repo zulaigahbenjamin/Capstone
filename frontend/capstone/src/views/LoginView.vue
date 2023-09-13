@@ -20,7 +20,7 @@
           <label for="password" class="text-start">PASSWORD</label>
           <input type="password" v-model="userPwd" name="password" />
         </div>
-        <button type="submit">Log In</button>
+        <button type="submit" @click="login()">Log In</button>
         <div class="registration-section">
         <p>Don't have an account?</p>
         <button class="link">
@@ -39,42 +39,57 @@ import Swal from "sweetalert2";
 export default {
   data() {
     return {
-      emailAddress: "",
-      userPwd: "",
-    };
+      email: "",
+      password: "",
+    }
   },
-  beforeCreate() {
-    this.$store.dispatch("cookieCheck");
-  },
-  methods: {
-    async userLogin() {
-      console.log("Reached");
-      try {
-        const payload = {
-          emailAddress: this.emailAddress,
-          userPwd: this.userPwd,
-        };
-        const resp = await this.$store.dispatch("login", payload);
-        if (resp.success && resp.token) {
-          await Swal.fire({
-            icon: "success",
-            title: "Logged in Successfully",
-            text: "You are now logged in!",
-          });
-          this.$router.push("/admin");
-        } else {
-          const errMsg = resp.error || "Unexpected error";
-          await Swal.fire({
-            icon: "error",
-            title: "Login failed",
-            text: errMsg,
-          });
-        }
-      } catch (e) {
-        console.error("Error while logging in: ", e);
+  // beforeCreate() {
+  //   this.$store.dispatch("cookieCheck");
+  // },
+  // methods: {
+  //   async userLogin() {
+  //     console.log("Reached");
+  //     try {
+  //       const payload = {
+  //         emailAddress: this.emailAddress,
+  //         userPwd: this.userPwd,
+  //       };
+  //       const resp = await this.$store.dispatch("login", payload);
+  //       if (resp.success && resp.token) {
+  //         await Swal.fire({
+  //           icon: "success",
+  //           title: "Logged in Successfully",
+  //           text: "You are now logged in!",
+  //         });
+  //         this.$router.push("/admin");
+  //       } else {
+  //         const errMsg = resp.error || "Unexpected error";
+  //         await Swal.fire({
+  //           icon: "error",
+  //           title: "Login failed",
+  //           text: errMsg,
+  //         });
+  //       }
+  //     } catch (e) {
+  //       console.error("Error while logging in: ", e);
+  //     }
+  //   },
+  // },
+  async loginUser() {
+      const success = await this.$store.dispatch('login', {
+        emailAddress: this.emailAddress,
+        password: this.password,
+      });
+
+      if (success) {
+        alert('Login successfully');
+        this.$router.push('/home')
       }
-    },
-  },
+      else {
+        alert('unable to login')
+      }
+  }
+  
 };
 </script>
 

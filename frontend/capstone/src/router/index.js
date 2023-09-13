@@ -5,7 +5,13 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: HomeView
+    component: HomeView,
+    beforeEnter: () => {
+      if(!Cookies.get('userToken')) {
+        router.push({name:"login"})
+      }
+    }
+    
   },
   {
     path: '/about',
@@ -22,7 +28,7 @@ const routes = [
   },
 
   {
-    path: '/product/:id',
+    path: '/products/:id',
     name: 'product',
     component: () => import ('../views/Product.vue')
   },
@@ -31,12 +37,13 @@ const routes = [
     name: 'products',
     component: () => import ('../views/Products.vue')
   },
-{
-  path: "/products/:id",
-  name: "product-edit",
-  component: () => import("../views/ProdEdit.vue"),
-  props: true,
-},
+
+  {
+    path: "/admin/products/:id",
+    name: "product-edit",
+    component: () => import("../views/ProdEdit.vue"),
+    props: true,
+  },
 {
   path: "/prod/add",
   name: "prod add",
@@ -50,16 +57,17 @@ const routes = [
   props: true,
 },
 {
+  path: "/users/:id",
+  name: "user profile",
+  component: () => import("../views/userProfile.vue"),
+  props: true,
+},
+{
   path: "/users/add",
   name: "userAdd",
   component: () => import("../views/UserAdd.vue"),
 },
-{
-  path: "/user/edit/:id",
-  name: "user edit",
-  component: () => import("../views/UserEdit.vue"),
-  props: true,
-},
+
 {
   path: "/users/add",
   name: "userAdd",
@@ -71,7 +79,7 @@ const routes = [
     component: () => import ('../views/CartView.vue')
   },
   {
-    path: "/admin/products/:id",
+    path: "/admin/product/:id",
     name: "product-edit",
     component: () => import("../views/ProdEdit.vue"),
     props: true,

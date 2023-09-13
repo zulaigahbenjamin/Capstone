@@ -2,15 +2,15 @@
     <br />
     <br />
     <br />
-    <ProdEditComp />
+    <ProductEditComp/>
   </template>
   
   <script>
-  import ProdEditComp from "@/components/ProdEditComp.vue";
+  import ProductEditComp from "@/components/ProdEditComp.vue";
   
   export default {
     components: {
-      ProdEditComp,
+      ProductEditComp,
     },
   };
   </script>

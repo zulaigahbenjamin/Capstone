@@ -67,7 +67,7 @@ export default {
     components: {
         AdminComp,
         UserAdminComp,
-        SpinnerComp,
+        SpinnerComp
     },
     computed: {
         products() {
