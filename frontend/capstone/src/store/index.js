@@ -137,11 +137,11 @@ export default createStore({
       }
     },
 
-    async fetchProducts(context, prodId) {
+    async fetchProduct( prodId) {
       try {
         let response = await fetch(`${apiUrl}product/${prodId}`);
-        let { results } = await response.json();
-        context.commit("SET_PRODUCT", results);
+        let { result } = await response.json();
+        context.commit("SET_PRODUCT", result);
       } catch (error) {
         alert(error.message);
       }
@@ -150,14 +150,17 @@ export default createStore({
 
    
     
-    async Register(context, newUser) {
+    async Register(context, payload) {
       try {
-        const response = await axios.post(`${apiUrl}register`, newUser)
-        if (response) {
-          context.commit("setUsers", response.data);
+        const response = await axios.post(`${apiUrl}register`, payload);
+        console.log('Result:', res);
+        let {result, msg, err} = await response.data;
+        if (msg) {
+          context.commit("setUsers", msg)
+          context.commit('spinner', false)
         }
         else {
-          alert('Post was unsuccessful')
+          context.commit('setMsg', err)
         }
       }
       catch (err) {
@@ -388,14 +391,14 @@ export default createStore({
   //add product
   addProduct: async (context, payload) => {
     try {
-      const res = await axios.post(`${apiUrl}products`, payload);
+      const res = await axios.post(`${apiUrl}product`, payload);
       if (res.status !== 200) {
         throw new Error("Failed to add product");
       }
 
       const product = res.data;
       context.commit("addProduct");
-      context.commit("SET_PRODUCT", product);
+      context.commit("SET_PRODUCTs", product);
     } catch (error) {
       console.error(error);
     }

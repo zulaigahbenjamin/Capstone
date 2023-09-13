@@ -85,7 +85,7 @@
           </div>
           <div class="box man-box">
             <div class="box-content b2">
-              <h3 class="prod-shop" style="color:#eb5e28 ;">FOOT SKIN CARE</h3>
+              <h3 class="prod-shop" style="color:#eb5e28 ;"></h3>
               <label class="prod-shop" style="color:#eb5e28 ;">COMBINATION SKIN</label>
               <a style="background-color:white ; color: #eb5e28;" class="feature-btn" href="./Products.vue">Go Here</a>
             </div>
@@ -97,7 +97,7 @@
               <label class="prod-shop" style="color: #3f9bd4;">COMBINATION SKIN</label>
               <a style="background-color: white;color: #3f9bd4;" class="feature-btn" href="./Products.vue">Go Here</a>
             </div>
-            <img src="https://i.postimg.cc/Hs8YdmMz/k-image-3.jpg" loading="lazy" class="image-feature">
+            <img src="https://i.postimg.cc/bvTLnJBL/uber-coffee-italian-blend-beans-1kg-600x.webp" loading="lazy" class="image-feature">
           </div>
         </div>
       </div>

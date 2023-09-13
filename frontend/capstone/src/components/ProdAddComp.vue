@@ -43,7 +43,7 @@
       />
    
 
-      <button @click="addProduct" class="btn-submit">Submit</button>
+      <button @click="addProduct()" class="btn-submit">Submit</button>
     </div>
   </div>
 </template>
@@ -82,7 +82,7 @@ export default {
 
 <style scoped>
 label {
-  color: white;
+  color: rgb(13, 13, 13);
 }
 .container {
   display: flex;

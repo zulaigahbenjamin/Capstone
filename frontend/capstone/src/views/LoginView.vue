@@ -20,13 +20,13 @@
           <label for="password" class="text-start">PASSWORD</label>
           <input type="password" v-model="userPwd" name="password" />
         </div>
-        <button type="submit" @click="login()">Log In</button>
+        <button type="submit">Log In</button>
         <div class="registration-section">
-        <p>Don't have an account?</p>
-        <button class="link">
-          <router-link to="/register" class="register-link text-decoration-none text-white">Register</router-link>
-        </button>
-      </div>
+          <p>Don't have an account?</p>
+          <button class="link">
+            <router-link to="/register" class="register-link text-decoration-none text-white">Register</router-link>
+          </button>
+        </div>
       </form>
     </div>
   </div>
@@ -37,62 +37,45 @@
 import Swal from "sweetalert2";
 
 export default {
+  name: "login",
   data() {
     return {
-      email: "",
-      password: "",
+      emailAddress: "", 
+      userPwd: "", 
     }
   },
-  // beforeCreate() {
-  //   this.$store.dispatch("cookieCheck");
-  // },
-  // methods: {
-  //   async userLogin() {
-  //     console.log("Reached");
-  //     try {
-  //       const payload = {
-  //         emailAddress: this.emailAddress,
-  //         userPwd: this.userPwd,
-  //       };
-  //       const resp = await this.$store.dispatch("login", payload);
-  //       if (resp.success && resp.token) {
-  //         await Swal.fire({
-  //           icon: "success",
-  //           title: "Logged in Successfully",
-  //           text: "You are now logged in!",
-  //         });
-  //         this.$router.push("/admin");
-  //       } else {
-  //         const errMsg = resp.error || "Unexpected error";
-  //         await Swal.fire({
-  //           icon: "error",
-  //           title: "Login failed",
-  //           text: errMsg,
-  //         });
-  //       }
-  //     } catch (e) {
-  //       console.error("Error while logging in: ", e);
-  //     }
-  //   },
-  // },
-  async loginUser() {
-      const success = await this.$store.dispatch('login', {
-        emailAddress: this.emailAddress,
-        password: this.password,
-      });
+  methods: {
+    async userLogin() {
+      try {
+        const payload = {
+          emailAddress: this.emailAddress,
+          userPwd: this.userPwd,
+        };
+        const resp = await this.$store.dispatch("login", payload);
 
-      if (success) {
-        alert('Login successfully');
-        this.$router.push('/home')
+        if (resp && resp.success && resp.token) {
+          await Swal.fire({
+            icon: "success",
+            title: "Logged in Successfully",
+            text: "You are now logged in!",
+          });
+          this.$router.push("/admin");
+        } else {
+          const errMsg = resp ? resp.error || "Unexpected error" : "Login failed";
+          await Swal.fire({
+            icon: "error",
+            title: "Login failed",
+            text: errMsg,
+          });
+        }
+      } catch (e) {
+        console.error("Error while logging in: ", e);
       }
-      else {
-        alert('unable to login')
-      }
+    },
   }
-  
-};
-</script>
 
+  }
+</script>
   
 <style scoped>
 .container {
@@ -136,15 +119,19 @@ form {
   transform: translateY(-50%);
   color: #6f4e37;
 }
+
 .registration-section {
   display: flex;
- 
+
 }
+
 label {
   font-size: 16px;
   color: #6f4e37;
 }
-.link, input:hover {
+
+.link,
+input:hover {
   color: brown;
 }
 

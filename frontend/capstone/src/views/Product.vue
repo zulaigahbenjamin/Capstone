@@ -4,18 +4,16 @@
       <div class="row gap-3 justify-content-center">
         <!-- Check if 'product' exists before rendering -->
         <div v-if="product" class="card">
-          <img
-            :src="product.prodUrl"
-            class="card-img-top"
-            style="padding: 1.6rem"
-            height="550"
-          />
-          <div class="card-body justify-content-center">
-            <h5 class="card-title">{{ product.prodName }}</h5>
-            <p class="card-text">{{ product.category }}</p>
-            <p class="card-text">R {{ product.amount }}</p>
-            <button @click="addToCart(product.prodId)">Add to Cart</button>
-            <router-link class="btn" to="/products">Go Back</router-link>
+          <div v-for="product of products" :key="product.prodId" class="col-12 col-sm-6 col-md-4 col-lg-3 my-4">
+
+            <img :src="product.prodUrl" class="card-img-top" style="padding: 1.6rem" height="550" />
+            <div class="card-body justify-content-center">
+              <h5 class="card-title">{{ product.prodName }}</h5>
+              <p class="card-text">{{ product.category }}</p>
+              <p class="card-text">R {{ product.amount }}</p>
+              <button @click="addToCart(product.prodId)">Add to Cart</button>
+              <router-link class="btn" to="/products">Go Back</router-link>
+            </div>
           </div>
         </div>
 
@@ -37,7 +35,8 @@ export default {
       return this.$store.state.product;
     },
     id() {
-      return this.$route.params.prodId },
+      return this.$route.params.prodId
+    },
     userData() {
       return this.$store.state.userData;
     },
@@ -45,7 +44,7 @@ export default {
 
 
   mounted() {
-    this.$store.dispatch("fetchProducts", this.prodId);
+    this.$store.dispatch("fetchProduct", this.prodId);
   },
   methods: {
     addToCart(prodId) {

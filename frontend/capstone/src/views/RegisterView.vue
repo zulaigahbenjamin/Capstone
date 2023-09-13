@@ -5,7 +5,7 @@
       <div class="col-md-6 ">
         <h1 class="mt-4">Welcome to Urban Bean Bistro!</h1>
 
-        <form class="row g-3 m-5 mb-2" @submit.prevent="register">
+        <form class="row g-3 m-5 mb-2" @submit.prevent="Register">
           <div class="col-12 ">
             <label for="firstName" class="form-label" style="float:left;">First Name:</label>
             <input type="text" class="form-control" placeholder="eg. Zulaigah" v-model="firstName" required
@@ -21,10 +21,10 @@
             <input type="text" class="form-control" placeholder="eg. Admin" v-model="userRole" required
               style="border:2px solid pink;" />
           </div>
-    
+
           <div class="col-12">
             <label for="gender" class="form-label" style="float:left;">Gender:</label>
-            <input type="gender" class="form-control" placeholder="eg. Female" v-model="gender" required
+            <input type="text" class="form-control" placeholder="eg. Female" v-model="gender" required
               style="border:2px solid pink;" />
           </div>
           <div class="col-12">
@@ -42,7 +42,7 @@
             <input type="password" class="form-control" v-model="userPwd" required style="border:2px solid pink;" />
           </div>
           <div class="col-12">
-            <button class="btn" type="submit" @click="AddUser()">Sign Up</button>
+            <button class="btn" type="submit">Sign Up</button>
           </div>
         </form>
         <router-link to="/login" class="register-link text-decoration-none text-white">
@@ -61,7 +61,7 @@
 
   
 <script>
-import Swal from "sweetalert2";
+import sweetAlert from 'sweetalert2'
 
 export default {
   data() {
@@ -78,18 +78,24 @@ export default {
     };
   },
   methods: {
-        AddUser() {
-            const success = this.$store.dispatch("Register", this.newUser);
-            if (success) {
-                alert("Success")
-                this.$router.push("/login")
-            }
-            else {
-                alert("Unable to add user")
-            }
-        }
+    Register() {
+     
+      this.$store.dispatch("Register", this.newUser)
+      .then(() => {
+            sweetAlert({
+            title: "success",
+            text:"you have successfully registered",
+            icon:"success",
+            confirmButtontext: "ok",
+            timer:1000
+          })
+        })
+        this.$router.push("/login")
+      }
+   
     }
-};
+  }
+
 </script>
 <style>
 .container33 {
