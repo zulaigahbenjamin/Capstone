@@ -24,8 +24,15 @@ export default createStore({
   },
 
   getters: {
-    cartTotalPrice(state) {
-      return state.cart.reduce((total, product) => total + product.amount, 0);
+ cartTotalPrice(state) {
+      // Use the reduce function to sum the amounts in the cart
+      const totalPrice = state.cart.reduce(
+        (total, product) => total + parseFloat(product.amount),
+        0
+      );
+
+      // Use toFixed to round to 2 decimal places and convert it back to a string
+      return totalPrice.toFixed(2);
     },
   },
   mutations: {
@@ -93,6 +100,32 @@ export default createStore({
     updateUser: (state, updatedUser) => {
       state.user = updatedUser;
     },
+    //admin
+    addProduct(state, product) {
+      state.products.push(product); 
+    },
+  deleteProduct(state, productId) {
+    state.products = state.products.filter((product) => product.id !== productId);
+  },
+  //update
+  updateProduct(state, data) {
+    const index = state.products.findIndex(product => product.id === data.id);
+    if (index !== -1) {
+      state.products[index] = data;
+    }
+  },
+  
+  updateUser(state, data) {
+    const index = state.users.findIndex(user => user.id === data.id);
+    if (index !== -1) {
+      state.users[index] = data;
+    }
+  },
+  //delete
+  //delete user
+deleteUser(state, userId) {
+  state.users = state.users.filter((user) => user.id !== userId);
+},
 
     clearCart(state) {
       state.cartItems = [];
@@ -213,6 +246,8 @@ export default createStore({
     //   context.dispatch("cookieCheck");
     // },
 
+
+    //logout
     async logout(context) {
       // context.commit("setToken", null);
       context.commit("setUser");
@@ -220,16 +255,15 @@ export default createStore({
       cookies.remove("legitUser");
     },
 
-    fetchCart({ commit }) {
 
-      const data = JSON.parse(localStorage.getItem('cart'))
-      console.log(data);
 
-      if (data) {
-        commit('setCart', data)
-      }
+
+    //cart
+    async getCart(context, id) {
+      const res = await axios.get(`${apiUrl}users/${id}/cart`);
+      context.commit("setCart", res.data);
+      console.log(id);
     },
-
     async addToCart({ commit }, { userId, prodId }) {
       try {
         // Send a POST request to your server's API endpoint
@@ -245,37 +279,58 @@ export default createStore({
           commit("addProductToCart", response.data); // Assuming the response contains the added product
         } else {
           // Handle other response statuses or errors
+          // You can also use try-catch blocks to handle errors more precisely
         }
+      } catch (error) {
+        console.error(error);
+        // Handle network errors or other exceptions
+      }
+    },
+
+
+
+    async removeFromCart({ commit }, { userId, cartId }) {
+      try {
+        await axios.delete(`${apiUrl}users/${userId}/cart/${cartId}`);
+
+        commit("removeFromCart", cartId);
       } catch (error) {
         console.error(error);
       }
     },
 
-
-
-    async removeProductFromCart(context, { userId, cartId }) {
+    async clearCart({ commit }, { userId }) {
       try {
-        await axios.delete(`${apiUrl}users/${userId}/cart/${cartId}`);
-
-        context.commit("removeFromCart", cartId);
+        await axios.delete(`${apiUrl}users/${userId}/cart`);
+        commit("clearCart", userId);
       } catch (error) {
-        console.error("Error removing product from cart:", error);
-        throw error;
+        console.error(error);
       }
     },
+  
   },
-  async clearCart({ commit }, { userId }) {
-    try {
-      await axios.delete(`${apiUrl}users/${userId}/cart`);
-      commit("clearCart", userId);
-    } catch (error) {
-      console.error(error);
-    }
-  },
-
 
   //USERS
+    //update user
+    async updateUser(context, payload) {
+      try {
+        const { res } = await axios.put(
+          `${apiUrl}users/${payload.userId}`,
+          payload
+        );
+        const { msg, err } = res.data;
+        if (msg) {
+          context.commit("setUser", msg);
+        }
+        if (err) {
+          context.commit("setMsg", err);
+        }
+      } catch (e) {
+        context.commit("setMsg", "an error occured");
+      }
+    },
 
+  //DELETE USER
   async deleteUser(context, id) {
     try {
       // Send a DELETE request to delete the user
@@ -294,103 +349,64 @@ export default createStore({
       // Handle network errors or other exceptions
     }
   },
+   //add user
+ 
 
-  //update user
-  async updateUsers(context, payload) {
+
+
+   //add product
+   async addProduct(context, productData) {
     try {
-      const response = await axios.patch(`https://capstone-8rni.onrender.com/user/${payload.UserID}`, payload);
-      // const response = await axios.patch(`http://localhost:3000/user/${payload.UserID}`, payload); 
-      const { msg } = response.data;
+      const res = await axios.post(`${apiUrl}products`, productData);
+      if (res.status !== 200) {
+        throw new Error("Failed to add product");
+      }
+  
+      const product = res.data;
+      context.commit("addProduct", product); // Pass the payload to the mutation
+      context.commit("SET_PRODUCT", product); // Update the "product" state
+    } catch (error) {
+      console.error(error);
+    }
+  },
+  
+  
+  async updateProduct(context, payload) {
+    try {
+      const { res } = await axios.put(
+        `${apiUrl}products/${payload.prodId}`,
+        payload
+      );
+      const { msg, err } = res.data;
       if (msg) {
-        context.dispatch("fetchUsers");
-        sweet({
-          title: "User Updated",
-          text: msg,
-          icon: "success",
-          timer: 2000
-        })
+        context.commit("setProduct", msg);
+      }
+      if (err) {
+        context.commit("setMsg", err);
+      }
+    } catch (e) {
+      context.commit("setMsg", "an error occured");
+    }
+  },
+  async deleteProduct(context, id) {
+    try {
+      // Send a DELETE request to delete the user
+      const response = await axios.delete(`${apiUrl}products/${id}`);
+
+      if (response.status === 204) {
+        // User deleted successfully
+        context.commit("setProduct", null); // Clear the user data in the store
+        console.log("Product deleted successfully");
       } else {
-        sweet({
-          title: "error",
-          text: msg,
-          icon: "error",
-          timer: 2000
-        })
+        // Handle other response statuses or errors
+        console.error("Failed to delete product");
       }
     } catch (error) {
       console.error(error);
-    }
-  },
-  //DELETE USER
-  deleteUser(context, UserID) {
-
-    axios.delete(`https://capstone-8rni.onrender.com/user/${UserID}`)
-      .then(response => {
-        context.dispatch("fetchUsers");
-      })
-      .catch(err => {
-        alert(err);
-      })
-  },
-  //add user
-  addUser(context, payload) {
-    axios.post("https://capstone-8rni.onrender.com/register", payload)
-      .then(response => {
-        console.log("User added:", response.data);
-        context.dispatch("fetchUsers")
-      })
-      .catch(error => {
-        console.error("Error adding user:", error);
-        alert("An error occurred while adding the user.");
-      });
-    alert("New user has been added.")
-  },
-
-
-
-  //add product
-  addProduct(context, payload) {
-    axios.post(`${apiUrl}/product`, payload)
-      .then(response => {
-        console.log("Product added:", response.data);
-        context.dispatch("fetchProducts")
-      })
-      .catch(error => {
-        console.error("Error adding product:", error);
-        alert("An error occurred while adding the product.");
-      });
-    alert("Item has been added.")
-  },
-
-  //edit
-  async updateProducts(context, payload) {
-    try {
-      const response = await axios.post(`${apiUrl}product/${payload.prodId}`, payload);
-      const productToEdit = response.data;
-      context.dispatch("fetchProducts");
-      sweet({
-        title: "Product Updated",
-        text: productToEdit.msg,
-        icon: "success",
-        timer: 2000
-      })
-    } catch (error) {
-      console.error(error);
+      // Handle network errors or other exceptions
     }
   },
 
-
-  //delete
-  deleteProduct(context, ProdID) {
-
-    axios.delete(`https://capstone-8rni.onrender.com/product/${ProdID}`)
-      .then(response => {
-        context.dispatch("fetchProducts");
-      })
-      .catch(err => {
-        alert(err);
-      })
-  },
   modules: {
 
   },

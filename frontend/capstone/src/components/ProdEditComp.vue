@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="container flex-container" v-if="product">
-
+<form @submit.prevent="updateProduct" >
       <label for="productName">Name</label>
       <input type="text" autocomplete="off" required id="productName" name="productName" v-model="product.prodName"
         :placeholder="product.prodName" />
@@ -26,7 +26,8 @@
       <input type="text" autocomplete="off" required id="category" name="category" v-model="product.category"
         :placeholder="product.category" />
 
-      <button @click="updateProduct()" class="btn-submit">Submit</button>
+      <button  class="btn-submit" type="submit">Submit</button>
+    </form>
     </div>
   </div>
 </template>
@@ -38,14 +39,14 @@ export default {
 
   data() {
     return {
-      product: {
+    
         prodName: "",
         quantity: "",
         amount: "",
         category: "",
         prodUrl: "https://i.postimg.cc/43GzNPSc/img1.jpg",
       }
-    }
+
 
   },
   methods: {
