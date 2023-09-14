@@ -186,15 +186,13 @@ export default {
       }
     },
     deleteProduct(productId) {
-      // Implement the logic to remove the product from the cart
-      // You can update the cart array and then save it to local storage
-      // Example: 
+     
       const updatedCart = this.cart.filter(item => item.product.prodId !== productId);
-      this.cart = updatedCart; // Update the cart in the data model
+      this.cart = updatedCart;
       this.saveCart();
     },
     saveCart() {
-      // Save the updated cart to local storage
+     
       localStorage.setItem('cart', JSON.stringify(this.cart));
     },
     calculateTotal(item) {

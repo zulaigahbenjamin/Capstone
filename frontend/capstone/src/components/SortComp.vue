@@ -146,6 +146,16 @@ export default {
       });
     },
   },
+  computed: {
+    // Create a computed property to filter products by category
+    filteredProducts() {
+      if (this.selectedCategory === 'all') {
+        return this.products; // Show all products if 'All Items' is selected
+      } else {
+        return this.products.filter((product) => product.category === this.selectedCategory);
+      }
+    },
+  },
 };
 </script>
 

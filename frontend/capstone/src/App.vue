@@ -14,17 +14,6 @@ export default {
   components: {
     NavBarComp, FooterComp
   },
-  // mounted() {
-  //   this.$store.dispatch("fetchProducts").then(() => {
-  //     this.products = this.$store.state.products;
-  //   });
-  // },
-  // created() {
-  //   const userData = localStorage.getProduct("userData");
-  //   if (userData) {
-  //     this.$store.commit("setUserData", JSON.parse(userData));
-  //   }
-  // },
 
 }
 </script>

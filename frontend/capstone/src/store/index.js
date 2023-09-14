@@ -1,8 +1,9 @@
 import { createStore } from "vuex";
 import axios from 'axios'
 const apiUrl = 'https://zulaigahcapstoneapi.onrender.com/';
-import VueCookies  from "vue3-cookies/dist/interfaces";
-const Cookies = VueCookies;
+
+import { useCookies } from "vue3-cookies";
+const { cookies } = useCookies();
 export default createStore({
   state: {
     users: null,
@@ -18,8 +19,8 @@ export default createStore({
     logStatus: null,
     cart: [],
     logStatus: null,
-    // addProductToCart: null,
-    // addProduct: null,
+    userAuth: null,
+
   },
 
   getters: {
@@ -28,7 +29,7 @@ export default createStore({
     },
   },
   mutations: {
-   
+
     SET_PRODUCTS(state, products) {
       state.products = products;
     },
@@ -48,14 +49,9 @@ export default createStore({
     setLogStatus(state, status) {
       state.logStatus = status;
     },
+
     setToken(state, token) {
       state.token = token;
-      Cookies.set("userToken", token, {
-        expires: 1,
-        path: "/",
-        secure: true,
-        sameSite: "None",
-      });
     },
     setUserData(state, userData) {
       state.userData = userData;
@@ -78,7 +74,7 @@ export default createStore({
     setCart(state, value) {
       state.cart = value;
     },
- 
+
     addProductToCart(state, product) {
       state.cart.push(product);
     },
@@ -93,14 +89,17 @@ export default createStore({
         return product.category === selectedCategory || selectedCategory === "all";
       });
     },
- 
+
     updateUser: (state, updatedUser) => {
       state.user = updatedUser;
     },
 
-     clearCart(state) {
+    clearCart(state) {
       state.cartItems = [];
     },
+    setUserLoggedIn: (state, userLog) => {
+      state.userLog = userLog;
+    }
   },
   actions: {
     async fetchUsers(context) {
@@ -115,7 +114,7 @@ export default createStore({
 
     getUser: async (context, userId) => {
       try {
-        const res = await fetch(`${apiUrl}user/${userId}`);
+        const res = await get(`${apiUrl}user/${userId}`);
         if (!res.ok) {
           throw new Error("Failed to fetch user by Id");
         }
@@ -137,7 +136,7 @@ export default createStore({
       }
     },
 
-    async fetchProduct( prodId) {
+    async fetchProduct(prodId) {
       try {
         let response = await fetch(`${apiUrl}product/${prodId}`);
         let { result } = await response.json();
@@ -146,15 +145,15 @@ export default createStore({
         alert(error.message);
       }
     },
-    
 
-   
-    
+
+
+
     async Register(context, payload) {
       try {
         const response = await axios.post(`${apiUrl}register`, payload);
         console.log('Result:', res);
-        let {result, msg, err} = await response.data;
+        let { result, msg, err } = await response.data;
         if (msg) {
           context.commit("setUsers", msg)
           context.commit('spinner', false)
@@ -165,7 +164,7 @@ export default createStore({
       }
       catch (err) {
         console.error(err);
-      } 
+      }
     },
 
 
@@ -175,8 +174,9 @@ export default createStore({
           await axios.post(`${apiUrl}login`, payload)
         ).data;
         if (result) {
+          console.log(result)
           context.commit("setUser", { result, msg });
-          Cookies.set("user", { msg, token, result });
+          cookies.set("legitUser", { msg, token, result });
           authuser.applyToken(token);
           sweetAlert({
             title: msg,
@@ -184,7 +184,7 @@ export default createStore({
             icon: "success",
             timer: 1000,
           });
-          router.push({ name: "home" });
+          this.$router.push('/userprofile');
         } else {
           sweetAlert({
             title: "Error",
@@ -197,38 +197,38 @@ export default createStore({
         context.commit("setMsg", "An error has occured");
       }
     },
-    
 
-    
- 
 
-    cookieCheck(context) {
-      const token = Cookies.get("userTo  ken");
-      if (token) {
-        context.commit("setToken", token);
-      }
-    },
 
-    init(context) {
-      context.dispatch("cookieCheck");
-    },
+
+
+    // cookieCheck(context) {
+    //   const token = cookies.get("userToken");
+    //   if (token) {
+    //     context.commit("setToken", token);
+    //   }
+    // },
+
+    // init(context) {
+    //   context.dispatch("cookieCheck");
+    // },
 
     async logout(context) {
-      context.commit("setToken", null);
-      context.commit("setUser", null);
-      context.commit("setUserData", null);
-      Cookies.remove("userToken");
+      // context.commit("setToken", null);
+      context.commit("setUser");
+      location.reload()
+      cookies.remove("legitUser");
     },
-    
-   fetchCart({commit}){
-    
-    const data = JSON.parse(localStorage.getItem('cart'))
-    console.log(data);
 
-    if(data){
-      commit('setCart', data)
-    }
-  },
+    fetchCart({ commit }) {
+
+      const data = JSON.parse(localStorage.getItem('cart'))
+      console.log(data);
+
+      if (data) {
+        commit('setCart', data)
+      }
+    },
 
     async addToCart({ commit }, { userId, prodId }) {
       try {
@@ -275,7 +275,7 @@ export default createStore({
 
 
   //USERS
-  
+
   async deleteUser(context, id) {
     try {
       // Send a DELETE request to delete the user
@@ -298,10 +298,10 @@ export default createStore({
   //update user
   async updateUsers(context, payload) {
     try {
-      const response = await axios.patch(`https://capstone-8rni.onrender.com/user/${payload.UserID}`, payload); 
+      const response = await axios.patch(`https://capstone-8rni.onrender.com/user/${payload.UserID}`, payload);
       // const response = await axios.patch(`http://localhost:3000/user/${payload.UserID}`, payload); 
-      const {msg} = response.data;
-      if(msg) {
+      const { msg } = response.data;
+      if (msg) {
         context.dispatch("fetchUsers");
         sweet({
           title: "User Updated",
@@ -309,7 +309,7 @@ export default createStore({
           icon: "success",
           timer: 2000
         })
-      }else {
+      } else {
         sweet({
           title: "error",
           text: msg,
@@ -321,19 +321,19 @@ export default createStore({
       console.error(error);
     }
   },
-//DELETE USER
-  deleteUser(context,UserID) {
-      
+  //DELETE USER
+  deleteUser(context, UserID) {
+
     axios.delete(`https://capstone-8rni.onrender.com/user/${UserID}`)
-    .then(response => {
-     context.dispatch("fetchUsers");
-    })
-  .catch (err => {
-   alert(err);
- })
-},
+      .then(response => {
+        context.dispatch("fetchUsers");
+      })
+      .catch(err => {
+        alert(err);
+      })
+  },
   //add user
-  addUser(context,payload) {
+  addUser(context, payload) {
     axios.post("https://capstone-8rni.onrender.com/register", payload)
       .then(response => {
         console.log("User added:", response.data);
@@ -343,13 +343,13 @@ export default createStore({
         console.error("Error adding user:", error);
         alert("An error occurred while adding the user.");
       });
-      alert("New user has been added.")
+    alert("New user has been added.")
   },
-  
+
 
 
   //add product
-  addProduct(context,payload) {
+  addProduct(context, payload) {
     axios.post(`${apiUrl}/product`, payload)
       .then(response => {
         console.log("Product added:", response.data);
@@ -359,7 +359,7 @@ export default createStore({
         console.error("Error adding product:", error);
         alert("An error occurred while adding the product.");
       });
-      alert("Item has been added.")
+    alert("Item has been added.")
   },
 
   //edit
@@ -381,16 +381,16 @@ export default createStore({
 
 
   //delete
-  deleteProduct(context,ProdID) {
-      
+  deleteProduct(context, ProdID) {
+
     axios.delete(`https://capstone-8rni.onrender.com/product/${ProdID}`)
-    .then(response => {
-     context.dispatch("fetchProducts");
-    })
-  .catch (err => {
-   alert(err);
- })
-},
+      .then(response => {
+        context.dispatch("fetchProducts");
+      })
+      .catch(err => {
+        alert(err);
+      })
+  },
   modules: {
 
   },

@@ -2,46 +2,16 @@
   <div>
     <div class="container flex-container">
       <label>Name</label>
-      <input
-        type="text"
-        autocomplete="off"
-        required
-        name="prodName"
-        v-model="prodName"
-      />
+      <input type="text" autocomplete="off" required name="prodName" v-model="prodName" />
       <label>Quantity</label>
-      <input
-        type="text"
-        autocomplete="off"
-        required
-        name="quantity"
-        v-model="quantity"
-      />
+      <input type="text" autocomplete="off" required name="quantity" v-model="quantity" />
       <label>Price</label>
-      <input
-        type="number"
-        autocomplete="off"
-        required
-        name="amount"
-        v-model="amount"
-      />
+      <input type="number" autocomplete="off" required name="amount" v-model="amount" />
       <label>Category</label>
-      <input
-        type="text"
-        autocomplete="off"
-        required
-        name="category"
-        v-model="category"
-      />
+      <input type="text" autocomplete="off" required name="category" v-model="category" />
       <label>Image</label>
-      <input
-        type="text"
-        autocomplete="off"
-        required
-        name="prodUrl"
-        v-model="prodUrl"
-      />
-   
+      <input type="text" autocomplete="off" required name="prodUrl" v-model="prodUrl" />
+
 
       <button @click="addProduct()" class="btn-submit">Submit</button>
     </div>
@@ -56,7 +26,7 @@ export default {
       amount: "",
       category: "",
       prodUrl: "https://i.postimg.cc/43GzNPSc/img1.jpg",
-    
+
     };
   },
   methods: {
@@ -84,6 +54,7 @@ export default {
 label {
   color: rgb(13, 13, 13);
 }
+
 .container {
   display: flex;
   flex-direction: column;

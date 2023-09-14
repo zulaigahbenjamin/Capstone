@@ -66,25 +66,20 @@ export default {
             confirmButtonText: "OK",
             timer: 1000
           });
-          this.$router.push("/admin");
+          this.$router.push("/userprofile");
         })
-        .catch(error => {
-          // Handle login error here
-          Swal.fire({
-            title: "Error",
-            text: "Failed to log in: " + error.message,
-            icon: "error",
-            confirmButtonText: "OK"
-          });
-        });
+      
     }
   },
   mounted() {
     //   console.log(cookies.get('setToken'));
+  },
+  beforeCreate() {
+    this.$store.dispatch("fetchUsers")
   }
 };
 </script>
-
+x
   
 <style scoped>
 .container {

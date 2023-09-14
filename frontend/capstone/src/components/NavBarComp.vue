@@ -26,20 +26,24 @@
             <li id="fade-in">
               <router-link to="/contact">Contact</router-link>
             </li>
-            <li id="fade-in">
+            <!-- <li id="fade-in">
               <router-link to="/register">Register</router-link>
+            </li> -->
+            <li id="fade-in">
+              <router-link to="/admin">Admin</router-link>
             </li>
             <li id="fade-in">
-              <router-link to="/admin">User</router-link>
+              <router-link to="/userprofile">Profile</router-link>
             </li>
-            <li id="fade-in">
-              <router-link to="/checkout">Checkout</router-link>
-            </li>
+           
             <li id="fade-in">
               <router-link to="/cart"><i class="fa-solid fa-cart-shopping fa-lg" style="color: #000000;"></i></router-link>
             </li>
             <li id="fade-in">
               <router-link to="/login"><i class="fa-regular fa-user fa-lg" style="color: #000000;"></i></router-link>
+            </li>
+            <li id="fade-in">
+              <router-link to="/login" @click="logout()">Logout</router-link>
             </li>
           </ul>
         </div>
@@ -47,8 +51,17 @@
     </nav>
   </div>
 </template>
+
 <script>
-export default {};
+import {useCookies}  from "vue3-cookies";
+const {cookies} = useCookies();
+export default {
+  methods: {
+    logout() {
+      this.$store.dispatch("logout")
+    }
+  }
+};
 </script>
 
 <style scoped>

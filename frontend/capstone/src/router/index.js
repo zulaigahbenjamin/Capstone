@@ -1,19 +1,21 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import VueCookies  from "vue3-cookies/dist/interfaces";
-
+import {useCookies}  from "vue3-cookies";
+const {cookies} = useCookies();
+import { requireAuth } from '../service/auth.js';
 const routes = [
   {
     path: '/',
     name: 'home',
     component: HomeView,
-    // beforeEnter: () => {
-    //   if(!VueCookies.get ('userToken')) {
-    //     router.push({name:"login"})
-    //   }
-    // }
+    beforeEnter: () => {
+      if(!cookies.get("legitUser")){
+        router.push({name:"login"})
+      }
+    }
     
   },
+
   {
     path: '/about',
     name: 'about',
@@ -26,6 +28,12 @@ const routes = [
     path: '/contact',
     name: 'contact',
     component: () => import ('../views/ContactView.vue')
+  },
+  {
+    path: '/userprofile',
+    name: 'userProfile',
+    component: () => import ('../views/userProfile.vue'),
+   
   },
 
   {
@@ -89,12 +97,10 @@ const routes = [
     path: '/admin',
     name: 'admin',
     component: () => import ('../views/AdminTable.vue'),
-    meta: {
-      requiresAuth: true, // Requires authentication to access
-      requiresAdmin: true, // Requires admin privileges to access
-    },
-  
+   
   },
+  
+
   {
     path: '/login',
     name: 'login',
@@ -107,18 +113,25 @@ const routes = [
     component: () => import("../views/RegisterView.vue"),
     props: true,
   },
-  {
-    path: "/checkout",
-    name: "rcheckout",
-    component: () => import("../views/checkoutView.vue"),
-    
-  },
+  
 
 ]
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
-})
+});
+
+// router.beforeEach(async (to, from, next) => {
+//   console.log(store.state); // Use the imported store object
+//   if (!store.state.user && to.name === 'home') {
+//     return next({ name: 'checkout' });
+//   } else if (store.state.user && to.name === 'checkout') {
+//     return next({ name: 'home' });
+//   }
+//   // Don't forget to call next() to continue the navigation
+//   next();
+// });
+
 
 export default router
