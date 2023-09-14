@@ -2,7 +2,7 @@ const db = require('../config/config.js')
 const { hash, compare } = require('bcrypt')
 
 const bcrypt = require('bcrypt');
-const { createToken } = require('../middleware/AuthenticateUser.js'); 
+const  {tokenCreated}  = require('../middleware/AuthenticateUser.js'); 
 
 
 
@@ -54,7 +54,7 @@ class users {
             await compare(userPwd, result[0].userPwd, (cErr, cResult) => {
               if (cErr) throw cErr;
               //create token
-              const token = createToken({
+              const token = tokenCreated({
                 emailAddress,
                 userPwd,
               });

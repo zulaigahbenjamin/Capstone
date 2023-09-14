@@ -1,6 +1,6 @@
 const { sign, verify } = require('jsonwebtoken')
 require("dotenv").config()
-function createToken(user) {
+function tokenCreated(user) {
     return sign({
         emailAddress: user.emailAddress,
         userPwd: user.userPwd
@@ -21,6 +21,6 @@ function verifyToken(token) {
     }
 }
 module.exports = {
-    createToken,
+    tokenCreated,
     verifyToken
 }
