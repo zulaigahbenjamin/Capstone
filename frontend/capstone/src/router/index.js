@@ -1,16 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import VueCookies  from "vue3-cookies/dist/interfaces";
 
 const routes = [
   {
     path: '/',
     name: 'home',
     component: HomeView,
-    beforeEnter: () => {
-      if(!Cookies.get('userToken')) {
-        router.push({name:"login"})
-      }
-    }
+    // beforeEnter: () => {
+    //   if(!VueCookies.get ('userToken')) {
+    //     router.push({name:"login"})
+    //   }
+    // }
     
   },
   {
@@ -87,7 +88,12 @@ const routes = [
   {
     path: '/admin',
     name: 'admin',
-    component: () => import ('../views/AdminTable.vue')
+    component: () => import ('../views/AdminTable.vue'),
+    meta: {
+      requiresAuth: true, // Requires authentication to access
+      requiresAdmin: true, // Requires admin privileges to access
+    },
+  
   },
   {
     path: '/login',

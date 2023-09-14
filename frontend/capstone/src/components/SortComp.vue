@@ -42,12 +42,12 @@
               <h5 class="card-title">{{ product.prodName }}</h5>
               <p class="card-text">{{ product.category }}</p>
               <p class="card-text">R {{ product.amount }}</p>
-            </div>
+              <button style="border: none; padding: 5px; margin:;" class="btn_prod" @click="addToCart(product)">Add to cart</button>            </div>
             <div class="card-footer">
               <router-link :to="{ name: 'product', params: { id: product.prodId } }" class="btn btn-outline btn-sm">
                 See More
               </router-link>
-           
+
             </div>
           </div>
         </div>
@@ -99,36 +99,38 @@ export default {
     };
   },
   methods: {
-    filter() {
-      this.filteredProducts = this.products.filter((product) => {
-        if (product.category == this.selectedCategory) {
-          return this.selectedCategory;
-        }
-      });
-    },
+  addToCart(product) {
+    if (localStorage.getItem('cart')) {
+      const data = JSON.parse(localStorage.getItem('cart'));
+      const newData = { product };
+      data.push(newData);
+      localStorage.setItem('cart', JSON.stringify(data)); // Use setItem to store data
+    } else {
+      const oldData = [{ product }];
+      localStorage.setItem('cart', JSON.stringify(oldData)); // Use setItem for the initial data
+    }
+  },
+
+  sort(sortOrder) {
+    this.sortOrder = sortOrder;
+    this.sortProducts(); // Call sortProducts to sort the products
+  },
+  
+  sortProducts() {
+    if (this.sortOrder === "price-high") {
+      this.products = this.products.sort((a, b) => a.amount - b.amount);
+    } else if (this.sortOrder === "price-low") {
+      this.products = this.products.sort((a, b) => b.amount - a.amount);
+    }
+  },
 
 
-    sortProducts() {
-      if (this.sortOrder === "price-high") {
-        this.filteredProducts = this.products.sort(
-          (a, b) => a.amount - b.amount
-        );
-      } else if (this.sortOrder === "price-low") {
-        this.filteredProducts = this.products.sort(
-          (a, b) => b.amount - a.amount
-        );
-      }
-    },
-    sortPrice() {
-      this.$store.commit("sortPropertiesByPrice");
-    },
   },
   watch: {
     selectedCategory: "filter",
     sortOrder: "sortProducts",
   },
   computed: {
-
     properties() {
       return this.$store.state.properties?.filter((property) => {
         let isMatch = true;
@@ -144,14 +146,15 @@ export default {
       });
     },
   },
-
 };
 </script>
 
+
 <style scoped>
 .color {
- background-color: rgb(248, 248, 212);
+  background-color: rgb(248, 248, 212);
 }
+
 /* Custom styling for coffee shop cards */
 .coffee-card {
   background-color: #fff;
@@ -234,5 +237,6 @@ export default {
 .filter-select,
 .sort-select {
   width: 100%;
-}</style>
+}
+</style>
 

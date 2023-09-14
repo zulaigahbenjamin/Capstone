@@ -61,6 +61,7 @@
 
   
 <script>
+import Swal from 'sweetalert2';
 import sweetAlert from 'sweetalert2'
 
 export default {
@@ -82,7 +83,7 @@ export default {
      
       this.$store.dispatch("Register", this.newUser)
       .then(() => {
-            sweetAlert({
+            Swal.fire({
             title: "success",
             text:"you have successfully registered",
             icon:"success",

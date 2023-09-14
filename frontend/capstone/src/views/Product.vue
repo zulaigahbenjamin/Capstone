@@ -4,23 +4,23 @@
       <div class="row gap-3 justify-content-center">
         <!-- Check if 'product' exists before rendering -->
         <div v-if="product" class="card">
-          <div v-for="product of products" :key="product.prodId" class="col-12 col-sm-6 col-md-4 col-lg-3 my-4">
 
             <img :src="product.prodUrl" class="card-img-top" style="padding: 1.6rem" height="550" />
             <div class="card-body justify-content-center">
               <h5 class="card-title">{{ product.prodName }}</h5>
               <p class="card-text">{{ product.category }}</p>
               <p class="card-text">R {{ product.amount }}</p>
-              <button @click="addToCart(product.prodId)">Add to Cart</button>
+            
               <router-link class="btn" to="/products">Go Back</router-link>
             </div>
           </div>
-        </div>
-
-        <!-- Handle the case where 'product' is not defined -->
-        <div v-else style="text-align: center !important; margin-top: 3rem">
+           <div v-else style="text-align: center !important; margin-top: 3rem">
           <SpinnerComp />
         </div>
+     
+
+        <!-- Handle the case where 'product' is not defined -->
+       
       </div>
     </div>
   </div>
@@ -44,20 +44,9 @@ export default {
 
 
   mounted() {
-    this.$store.dispatch("fetchProduct", this.prodId);
+    this.$store.dispatch("getProduct", this.prodId);
   },
-  methods: {
-    addToCart(prodId) {
-      if (this.userData && this.userData.userId) {
-        this.$store.dispatch("addToCart", {
-          userId: this.userData.userId,
-          prodId,
-        });
-      } else {
-        // Handle the case where the user is not logged in, prompt for login, etc.
-      }
-    },
-  },
+ 
 };
 </script>
 

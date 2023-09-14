@@ -1,8 +1,8 @@
 import { createStore } from "vuex";
 import axios from 'axios'
 const apiUrl = 'https://zulaigahcapstoneapi.onrender.com/';
-
-import Cookies from "js-cookie";
+import VueCookies  from "vue3-cookies/dist/interfaces";
+const Cookies = VueCookies;
 export default createStore({
   state: {
     users: null,
@@ -83,9 +83,9 @@ export default createStore({
       state.cart.push(product);
     },
 
-    removeFromCart(state, cartID) {
+    removeFromCart(state, cartId) {
       // Remove the item from the cart state
-      state.cart = state.cart.filter((cart) => cart.cartID !== cartID);
+      state.cart = state.cart.filter((cart) => cart.cartId !== cartId);
     },
 
     setFilteredProducts(state, selectedCategory) { // Mutation to set filteredProducts
@@ -117,7 +117,7 @@ export default createStore({
       try {
         const res = await fetch(`${apiUrl}user/${userId}`);
         if (!res.ok) {
-          throw new Error("Failed to fetch user by ID");
+          throw new Error("Failed to fetch user by Id");
         }
         const user = await res.json();
 
@@ -168,99 +168,39 @@ export default createStore({
       } 
     },
 
-    // async register({ commit }, userData) {
-    //   try {
-    //     const response = await axios.post(`${apiUrl}register`, userData);
-    //     const { msg, token } = response.data;
-  
-    //     if (token) {
-    //       commit('setRegistrationStatus', 'Registered successfully');
-    //       return { success: true, token };
-    //     } else if (msg === 'An error occurred') {
-    //       commit('setError', msg);
-    //       commit('setRegistrationStatus', 'Not registered');
-    //       return { success: false, error: msg };
-    //     }
-    //   } catch (error) {
-    //     commit('setError', error.message);
-    //     commit('setRegistrationStatus', 'Not registered');
-    //     throw error;
-    //   }
-    // },
-    async login({ commit }, { email, password }) {
+
+    async login(context, payload) {
       try {
-        const response = await axios.post(`${apiUrl}login`, { emailAddress: email, userPwd: password });
-
-        if (response.data.token) {
-          const token = response.data.token;
-          const userData = response.data.result;
-
-          commit('setToken', token);
-          commit('setUserData', userData);
-
-          // Redirect to the dashboard or another page after successful login
+        const { msg, token, result } = (
+          await axios.post(`${apiUrl}login`, payload)
+        ).data;
+        if (result) {
+          context.commit("setUser", { result, msg });
+          Cookies.set("user", { msg, token, result });
+          authuser.applyToken(token);
+          sweetAlert({
+            title: msg,
+            text: `Welcome back ${result?.firstName} ${result?.lastName}`,
+            icon: "success",
+            timer: 1000,
+          });
+          router.push({ name: "home" });
         } else {
-          alert('Login failed. Please check your credentials.');
+          sweetAlert({
+            title: "Error",
+            text: msg,
+            icon: "error",
+            timer: 1000,
+          });
         }
-      } catch (err) {
-        console.error(err);
-        alert('An error occurred during login.');
+      } catch (e) {
+        context.commit("setMsg", "An error has occured");
       }
     },
+    
 
     
-    // async login(context, payload) {
-    //   try {
-    //     const res = await axios.post(`${apiUrl}login`, payload);
-    //     const { msg, err, token, userData } = res.data;
-    //     if (msg === "You are providing the wrong email or password") {
-    //       console.log(msg);
-    //       context.commit("setError", msg);
-    //       context.commit("setLogStatus", "Not logged in");
-    //       return { success: false, error: msg };
-    //     }
-    //     if (token) {
-    //       // Save the token in local storage
-    //       localStorage.setItem("userToken", token);
-    //       localStorage.setItem("userData", JSON.stringify(userData));
-
-    //       context.commit("setUser", userData);
-    //       context.commit("setToken", token);
-
-    //       // Log user details here
-    //       console.log("User logged in:", userData);
-
-    //       context.commit("setLogStatus", res.data.message);
-
-    //       return { success: res.data.success, token };
-    //     } else if (err) {
-    //       context.commit("setToken", null);
-    //       context.commit("setError", err);
-    //       return { success: false, error: err };
-    //     } else {
-    //       context.commit("setError", "Unknown error during login");
-    //       context.commit("setLogStatus", "not logged in");
-    //       return { success: false, error: "Unknown error" };
-    //     }
-    //   } catch (err) {
-    //     if (err.resp) {
-    //       console.error(
-    //         "Server gave an error: ",
-    //         err.resp.status,
-    //         err.resp.data
-    //       );
-    //     } else if (err.req) {
-    //       console.error(
-    //         "No response from the server. Check your internet connection"
-    //       );
-    //     } else {
-    //       console.log("An error occurred: ", err);
-    //     }
-    //     context.commit("setError", "An error occurred while trying to log in");
-    //     context.commit("setLogStatus", "Not logged in");
-    //     return { success: false, error: "Network error" };
-    //   }
-    // },
+ 
 
     cookieCheck(context) {
       const token = Cookies.get("userTo  ken");
@@ -280,29 +220,16 @@ export default createStore({
       Cookies.remove("userToken");
     },
     
-    async getCart(context, id) {
-      const res = await axios.get(`${apiUrl}orders/${id}/cart`);
-      context.commit("setCart", res.data);
-      console.log(id);
-    },
+   fetchCart({commit}){
+    
+    const data = JSON.parse(localStorage.getItem('cart'))
+    console.log(data);
 
-   
-    // async addToCart(context, { userId, prodId }) {
-    //   try {
-    //     const response = await axios.post(`${apiUrl}users/${userId}/cart`, {
-    //       userId,
-    //       prodId,
-    //     });
+    if(data){
+      commit('setCart', data)
+    }
+  },
 
-    //     if (response.status === 200) {
-    //      commit("addProductToCart", response.data);
-    //     }
-    //   } else {
-
-    //   }catch (error) {
-       
-    //   }
-    // },
     async addToCart({ commit }, { userId, prodId }) {
       try {
         // Send a POST request to your server's API endpoint
@@ -347,7 +274,7 @@ export default createStore({
   },
 
 
-  //crud
+  //USERS
   
   async deleteUser(context, id) {
     try {
@@ -369,80 +296,101 @@ export default createStore({
   },
 
   //update user
-  async updateUser(context, payload) {
+  async updateUsers(context, payload) {
     try {
-      const { res } = await axios.put(
-        `${apiUrl}users/${payload.userId}`,
-        payload
-      );
-      const { msg, err } = res.data;
-      if (msg) {
-        context.commit("setUser", msg);
+      const response = await axios.patch(`https://capstone-8rni.onrender.com/user/${payload.UserID}`, payload); 
+      // const response = await axios.patch(`http://localhost:3000/user/${payload.UserID}`, payload); 
+      const {msg} = response.data;
+      if(msg) {
+        context.dispatch("fetchUsers");
+        sweet({
+          title: "User Updated",
+          text: msg,
+          icon: "success",
+          timer: 2000
+        })
+      }else {
+        sweet({
+          title: "error",
+          text: msg,
+          icon: "error",
+          timer: 2000
+        })
       }
-      if (err) {
-        context.commit("setMsg", err);
-      }
-    } catch (e) {
-      context.commit("setMsg", "an error occured");
-    }
-  },
-
-
-  //add product
-  addProduct: async (context, payload) => {
-    try {
-      const res = await axios.post(`${apiUrl}product`, payload);
-      if (res.status !== 200) {
-        throw new Error("Failed to add product");
-      }
-
-      const product = res.data;
-      context.commit("addProduct");
-      context.commit("SET_PRODUCTs", product);
     } catch (error) {
       console.error(error);
     }
   },
+//DELETE USER
+  deleteUser(context,UserID) {
+      
+    axios.delete(`https://capstone-8rni.onrender.com/user/${UserID}`)
+    .then(response => {
+     context.dispatch("fetchUsers");
+    })
+  .catch (err => {
+   alert(err);
+ })
+},
+  //add user
+  addUser(context,payload) {
+    axios.post("https://capstone-8rni.onrender.com/register", payload)
+      .then(response => {
+        console.log("User added:", response.data);
+        context.dispatch("fetchUsers")
+      })
+      .catch(error => {
+        console.error("Error adding user:", error);
+        alert("An error occurred while adding the user.");
+      });
+      alert("New user has been added.")
+  },
+  
+
+
+  //add product
+  addProduct(context,payload) {
+    axios.post(`${apiUrl}/product`, payload)
+      .then(response => {
+        console.log("Product added:", response.data);
+        context.dispatch("fetchProducts")
+      })
+      .catch(error => {
+        console.error("Error adding product:", error);
+        alert("An error occurred while adding the product.");
+      });
+      alert("Item has been added.")
+  },
 
   //edit
-  async updateProduct(context, payload) {
+  async updateProducts(context, payload) {
     try {
-      const { res } = await axios.post(
-        `${apiUrl}product/${payload.prodId}`,
-        payload
-      );
-      const { msg, err } = res.data;
-      if (msg) {
-        context.commit("SET_PRODUCT", msg);
-      }
-      if (err) {
-        context.commit("setMsg", err);
-      }
-    } catch (e) {
-      context.commit("setMsg", "an error occured");
+      const response = await axios.post(`${apiUrl}product/${payload.prodId}`, payload);
+      const productToEdit = response.data;
+      context.dispatch("fetchProducts");
+      sweet({
+        title: "Product Updated",
+        text: productToEdit.msg,
+        icon: "success",
+        timer: 2000
+      })
+    } catch (error) {
+      console.error(error);
     }
   },
 
 
   //delete
-  async deleteProduct(context, prodId) {
-    try {
-      // Send a DELETE request to delete the user
-      const response = await axios.delete(`${apiUrl}products/${prodId}`);
-
-      if (response.status === 204) {
-        // User deleted successfully
-        context.commit("SET_PRODUCT", null); // Clear the user data in the store
-        console.log("Product deleted successfully");
-      } else {
-        // Handle other response statuses or errors
-        console.error("Failed to delete product");
-      }
-    } catch (error) {
-      console.error(error);
-      // Handle network errors or other exceptions
-    }
-  },
+  deleteProduct(context,ProdID) {
+      
+    axios.delete(`https://capstone-8rni.onrender.com/product/${ProdID}`)
+    .then(response => {
+     context.dispatch("fetchProducts");
+    })
+  .catch (err => {
+   alert(err);
+ })
+},
   modules: {
 
   },

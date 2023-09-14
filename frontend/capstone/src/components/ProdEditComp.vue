@@ -1,72 +1,32 @@
 <template>
   <div>
     <div class="container flex-container" v-if="product">
+
       <label for="productName">Name</label>
-      <input
-        type="text"
-        autocomplete="off"
-        required
-        id="productName"
-        name="productName"
-        v-model="product.prodName"
-        :placeholder="product.prodName"
-      />
+      <input type="text" autocomplete="off" required id="productName" name="productName" v-model="product.prodName"
+        :placeholder="product.prodName" />
+
       <label for="quantity">Quantity</label>
-      <input
-        type="text"
-        autocomplete="off"
-        required
-        id="quantity"
-        name="quantity"
-        v-model="product.quantity"
-        :placeholder="product.quantity"
-      />
+      <input type="text" autocomplete="off" required id="quantity" name="quantity" v-model="product.quantity"
+        :placeholder="product.quantity" />
 
       <label for="quantity">Price</label>
-      <input
-        type="text"
-        autocomplete="off"
-        required
-        id="amount"
-        name="amount"
-        v-model="product.amount"
-        :placeholder="product.amount"
-      />
+      <input type="text" autocomplete="off" required id="amount" name="amount" v-model="product.amount"
+        :placeholder="product.amount" />
 
       <label for="quantity">Category</label>
-      <input
-        type="text"
-        autocomplete="off"
-        required
-        id="category"
-        name="category"
-        v-model="product.category"
-        :placeholder="product.category"
-      />
+      <input type="text" autocomplete="off" required id="category" name="category" v-model="product.category"
+        :placeholder="product.category" />
 
       <label for="image">Image</label>
-      <input
-        type="text"
-        autocomplete="off"
-        required
-        id="prodUrl"
-        name="prodUrl"
-        v-model="product.prodUrl"
-        :placeholder="product.prodUrl"
-      />
+      <input type="text" autocomplete="off" required id="prodUrl" name="prodUrl" v-model="product.prodUrl"
+        :placeholder="product.prodUrl" />
 
       <label for="category">Category</label>
-      <input
-        type="text"
-        autocomplete="off"
-        required
-        id="category"
-        name="category"
-        v-model="product.category"
-        :placeholder="product.category"
-      />
+      <input type="text" autocomplete="off" required id="category" name="category" v-model="product.category"
+        :placeholder="product.category" />
 
-      <button @click="updateProduct" class="btn-submit">Submit</button>
+      <button @click="updateProduct()" class="btn-submit">Submit</button>
     </div>
   </div>
 </template>
@@ -78,12 +38,15 @@ export default {
 
   data() {
     return {
-      prodName: "",
-      quantity: "",
-      amount: "",
-      category: "",
-      prodURL: "https://i.postimg.cc/43GzNPSc/img1.jpg",
-    };
+      product: {
+        prodName: "",
+        quantity: "",
+        amount: "",
+        category: "",
+        prodUrl: "https://i.postimg.cc/43GzNPSc/img1.jpg",
+      }
+    }
+
   },
   methods: {
     async updateProduct() {
@@ -128,6 +91,7 @@ export default {
 label {
   color: white;
 }
+
 .container {
   display: flex;
   flex-direction: column;

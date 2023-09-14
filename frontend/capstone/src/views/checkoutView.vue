@@ -79,8 +79,15 @@
     },
   
     mounted() {
-      this.$store.dispatch("getCart", this.user.userId);
-    },
+    if (this.user?.userId) {
+      // Access the 'userId' property
+      const userId = this.user.userId;
+      // Now you can use 'userId' safely
+    } else {
+      // Handle the case when 'user' or 'userId' is not defined
+      console.error("User or userId is not defined");
+    }
+  },
     methods: {
       async checkout() {
         const userId = this.user.userId;
@@ -88,7 +95,7 @@
         try {
           await this.$store.dispatch("clearCart", { userId });
   
-          // Show a SweetAlert for a successful purchase
+          
           Swal.fire({
             title: "Thank you for shopping at Urban Bistro!",
             

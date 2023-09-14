@@ -9,16 +9,16 @@
     <div class="col-6 login-field">
       <h1 class="text">WELCOME BACK!</h1>
 
-      <form @submit.prevent="userLogin">
+      <form @submit.prevent="login"   >
         <div class="input-group">
           <div class="input-icon fas fa-envelope"></div>
           <label for="email" class="text-start">ENTER YOUR EMAIL</label>
-          <input type="email" name="email" v-model="emailAddress" placeholder="e.g., zulaigahbenjamin09@gmail.com" />
+          <input type="email" name="email" v-model="payload.emailAddress" placeholder="e.g., zulaigahbenjamin09@gmail.com" />
         </div>
         <div class="input-group">
           <div class="input-icon fas fa-lock"></div>
           <label for="password" class="text-start">PASSWORD</label>
-          <input type="password" v-model="userPwd" name="password" />
+          <input type="password" v-model="payload.userPwd" name="password" />
         </div>
         <button type="submit">Log In</button>
         <div class="registration-section">
@@ -34,48 +34,57 @@
 
   
 <script>
-import Swal from "sweetalert2";
+import Swal from 'sweetalert2';
 
 export default {
-  name: "login",
+  name: 'login',
+  props: ['initialPayload'],
   data() {
     return {
-      emailAddress: "", 
-      userPwd: "", 
+      payload: {
+        emailAddress: '',
+        userPwd: ''
+      }
+    };
+  },
+  computed: {
+    Msg() {
+      return this.$store.state.Msg;
+    },
+    user() {
+      return this.$store.state.user;
     }
   },
   methods: {
-    async userLogin() {
-      try {
-        const payload = {
-          emailAddress: this.emailAddress,
-          userPwd: this.userPwd,
-        };
-        const resp = await this.$store.dispatch("login", payload);
-
-        if (resp && resp.success && resp.token) {
-          await Swal.fire({
+    login() {
+      this.$store.dispatch('login', this.payload)
+        .then(() => {
+          Swal.fire({
+            title: "Success",
+            text: "You are now logged in",
             icon: "success",
-            title: "Logged in Successfully",
-            text: "You are now logged in!",
+            confirmButtonText: "OK",
+            timer: 1000
           });
           this.$router.push("/admin");
-        } else {
-          const errMsg = resp ? resp.error || "Unexpected error" : "Login failed";
-          await Swal.fire({
+        })
+        .catch(error => {
+          // Handle login error here
+          Swal.fire({
+            title: "Error",
+            text: "Failed to log in: " + error.message,
             icon: "error",
-            title: "Login failed",
-            text: errMsg,
+            confirmButtonText: "OK"
           });
-        }
-      } catch (e) {
-        console.error("Error while logging in: ", e);
-      }
-    },
+        });
+    }
+  },
+  mounted() {
+    //   console.log(cookies.get('setToken'));
   }
-
-  }
+};
 </script>
+
   
 <style scoped>
 .container {
