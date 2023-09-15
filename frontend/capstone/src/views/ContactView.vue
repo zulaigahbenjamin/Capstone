@@ -2,14 +2,12 @@
   <section class="overflow-x-hidden hero m-0 align-content-sm-start">
     <div class="hero-inner text-center">
       <h2 class="text">
-        Contact us Now 
+        Contact us Now
       </h2>
       <p>And stand a chance to win a 1 Large Americano , Mocha or Hazelnut Cuppecino Every Day for 2 weeks </p>
     </div>
   </section>
-
   <div class="row">
-    
     <div class="col-lg w-100 fresh mt-4">
       <h1>EMAIL US</h1>
       <form>
@@ -21,9 +19,8 @@
             <input type="text" name="email" placeholder="Email Address" />
           </div>
         </div>
-
         <div class="mt-3 h-5">
-          <input type="text" name="message" placeholder="Enter your message" />
+          <input class="hi" type="text" name="message" placeholder="Enter your message" />
         </div>
         <div class="but">
           <button method="POST" class="send">SEND</button>
@@ -32,7 +29,6 @@
     </div>
     <div class="col-lg">
       <div class="image">
-        
         <h3 class="tee">Subscribe to our Newsletter</h3>
         <p style="color: white">
           Subscribe for all the latest deeals and daily discounts
@@ -111,13 +107,8 @@
     <div class="maps">
       <iframe
         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3310.934053869278!2d18.413043688854962!3d-33.917096799999996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1dd669f885dbfeb1%3A0xfd6f1f60fa61cc5d!2sOrigin%20Coffee%20Roasting!5e0!3m2!1sen!2sza!4v1693822010647!5m2!1sen!2sza"
-        width="1360"
-        height="450"
-        style="border: 0"
-        allowfullscreen=""
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"
-      ></iframe>
+        width="1360" height="450" style="border: 0" allowfullscreen="" loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"></iframe>
     </div>
   </div>
 </template>
@@ -127,43 +118,57 @@ export default {};
 </script>
 
 <style scoped>
-h2, p {
-  color:white;
+h2,
+p {
+  color: white;
   opacity: none;
 }
+
 .send {
   float: right;
+}
+.hi {
+  height:90px;
+  width:95%;
 }
 .h2 {
   color: white;
   padding-top: 30px;
 }
+
 .freshe {
   background-color: rgba(245, 245, 220, 1);
   padding-top: 30px;
 }
+
 .beann {
   background-color: rgba(0, 0, 0, 0.6);
 }
+
 .two {
   margin-left: 59px;
 }
+
 .ol {
   font-family: "Nunito";
 }
+
 .heading {
   color: rgba(220, 164, 125, 1);
   font-family: "Oswald";
   margin-top: 20px;
 }
+
 ul {
   display: grid;
   text-align: left;
 }
+
 .tee {
   padding-top: 50px;
   color: white;
 }
+
 .hero {
   background-image: url("https://i.postimg.cc/gJQwNXjz/span-et-parallax-bg-3.png");
   background-size: cover;
@@ -176,9 +181,10 @@ ul {
   font-size: 50px;
   padding: 0;
   /* z-index: 0; */
-    opacity: 0.5;
+  opacity: 0.5;
   height: 100vh;
 }
+
 input {
   width: 90%;
 }
@@ -186,6 +192,7 @@ input {
 h1 {
   color: black;
 }
+
 .image {
   background-image: url("https://i.postimg.cc/C5r1ZPRK/div-et-pb-column-1.png");
   opacity: unset;
@@ -193,6 +200,7 @@ h1 {
   height: 110vh;
   width: 100%;
 }
+
 button {
   color: white;
   background-color: rgba(220, 164, 125, 1);
@@ -200,6 +208,7 @@ button {
   margin-top: 20px;
   width: 90%;
 }
+
 .but {
   color: white;
   border: 2px solid white;
@@ -207,5 +216,4 @@ button {
   width: 20%;
   justify-content: center;
   text-align: center;
-}
-</style>
+}</style>

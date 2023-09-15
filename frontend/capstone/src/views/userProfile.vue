@@ -287,11 +287,7 @@ body {
         <div class="card my-2 row">
           <div class="row justify-content-center align-items-center">
             <div class="col-6">
-              <img
-                class="profile"
-                :src="user.userProfile"
-                :alt="user.firstName"
-              />
+              <img class="profile" :src="user.userProfile" :alt="user.firstName" />
             </div>
             <div class="col-4">
               <h1>Profile</h1>
@@ -300,28 +296,18 @@ body {
               <p>{{ user.firstName }} {{ user.lastName }}</p>
               <h3>Role:</h3>
               <p>{{ user.userRole }}</p>
+              <h3>Gender</h3>
+              <p>{{ user.gender }}</p>
               <h3>Email:</h3>
               <p>{{ user.emailAddress }}</p>
+              <h3>Password</h3>
+              <p>{{ user.userPwd }}</p>
               <button>
-                <router-link
-                  :to="{ name: 'edit user', params: { id: user.userId } }"
-                  ><img
-                    class="edit-icon"
-                    src="https://i.postimg.cc/T2Z8Qtg6/icons8-edit-50-removebg-preview.png"
-                    alt=""
-                /></router-link>
+                <router-link to="/users/:id"><img class=" edit-icon"
+                    src="https://i.postimg.cc/T2Z8Qtg6/icons8-edit-50-removebg-preview.png" alt="" /></router-link>
               </button>
-              <button
-                type="submit"
-                class="btn btton"
-                @click="deleteUser(user.userID)"
-                id="delete-row"
-              >
-                <img
-                  class="edit-icon"
-                  src="https://i.postimg.cc/kMtSk56b/icons8-delete-30.png"
-                  alt=""
-                />
+              <button type="submit" class="btn btton" @click="deleteUser(user.userId)" id="delete-row">
+                <img class="edit-icon" src="https://i.postimg.cc/kMtSk56b/icons8-delete-30.png" alt="" />
               </button>
             </div>
           </div>
@@ -350,7 +336,7 @@ export default {
     },
   },
   mounted() {
-    this.$store.dispatch("getUser", this.id);
+    this.$store.dispatch("fetchUser", this.id);
   },
   methods: {
     async deleteUser(userId) {
@@ -374,6 +360,7 @@ export default {
   overflow: hidden;
   background-color: #e4c2a2;
 }
+
 .profile {
   height: 350px;
   width: auto;

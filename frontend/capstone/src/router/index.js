@@ -22,29 +22,54 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue'),
+    beforeEnter: () => {
+      if(!cookies.get("legitUser")){
+        router.push({name:"login"})
+      }
+    }
   },
+  
   {
     path: '/contact',
     name: 'contact',
-    component: () => import ('../views/ContactView.vue')
+    component: () => import ('../views/ContactView.vue'),
+    beforeEnter: () => {
+      if(!cookies.get("legitUser")){
+        router.push({name:"login"})
+      }
+    }
   },
   {
     path: '/userprofile',
     name: 'userProfile',
     component: () => import ('../views/userProfile.vue'),
-   
+    beforeEnter: () => {
+      if(!cookies.get("legitUser")){
+        router.push({name:"login"})
+      }
+    }
   },
 
   {
     path: '/products/:id',
     name: 'product',
-    component: () => import ('../views/Product.vue')
+    component: () => import ('../views/Product.vue'),
+    beforeEnter: () => {
+      if(!cookies.get("legitUser")){
+        router.push({name:"login"})
+      }
+    }
   },
   {
     path: '/products',
     name: 'products',
-    component: () => import ('../views/Products.vue')
+    component: () => import ('../views/Products.vue'),
+    beforeEnter: () => {
+      if(!cookies.get("legitUser")){
+        router.push({name:"login"})
+      }
+    }
   },
 
   {
@@ -69,6 +94,11 @@ const routes = [
   path: "/users/:id",
   name: "user profile",
   component: () => import("../views/userProfile.vue"),
+  beforeEnter: () => {
+    if(!cookies.get("legitUser")){
+      router.push({name:"login"})
+    }
+  },
   props: true,
 },
 {
@@ -85,42 +115,28 @@ const routes = [
   {
     path: '/cart',
     name: 'cart',
-    component: () => import ('../views/CartView.vue')
+    component: () => import ('../views/CartView.vue'),
+    beforeEnter: () => {
+      if(!cookies.get("legitUser")){
+        router.push({name:"login"})
+      }
+    }
   },
   {
     path: "/admin/product/:id",
     name: "product-edit",
     component: () => import("../views/ProdEdit.vue"),
-    props: true,
+   
   },
   {
     path: '/admin',
     name: 'admin',
     component: () => import ('../views/AdminTable.vue'),
-    // beforeEnter: (to, from, next) => {
-    //   const user = store.state.user
-    //   if (!cookies.get("legitUser")) {
-    //     next('/');
-    //     sweetAlert({
-    //       title: "Error",
-    //       text: "User Not Logged In",
-    //       icon: "error",
-    //       timer: 1000,
-    //     });
-    //   } else if (user && user.role !== 'admin') {
-    //     // User is logged in but not an admin, redirect to an unauthorized page or show an error message
-    //     sweetAlert({
-    //       title: "Error",
-    //       text: "Access Denied. You are not an admin.",
-    //       icon: "error",
-    //       timer: 1000,
-    //     })
-    //   }
-
-    //   else {
-    //     next();
-    //   }
-    // }
+    beforeEnter: () => {
+      if(!cookies.get("legitUser")){
+        router.push({name:"login"})
+      }
+    }
    
   },
   

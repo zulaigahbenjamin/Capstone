@@ -16,9 +16,12 @@
               Edit
             </router-link>
           </button>
-          <button class="btn-delete text-black" @click="deleteUser(id )">
-            Delete
-          </button>
+          <button
+          class="btn-delete text-white"
+          @click="deleteUser(user.userId)"
+        >
+          Delete
+        </button>
         </div>
       </td>
     </tr>

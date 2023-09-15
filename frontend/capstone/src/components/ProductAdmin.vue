@@ -164,4 +164,51 @@ export default {
     border-radius: 0.125rem;
   }
 }
+.table-row {
+  font-size: 1.125rem;
+  border-color: rgba(0, 0, 0, 0.1);
+  border-bottom-width: 2px;
+}
+
+/* Add your existing styles here */
+
+@media only screen and (min-width: 700px) {
+  /* Larger screens */
+  .table-row {
+    width: 1000px !important;
+  }
+
+  /* Adjust other styles as needed for larger screens */
+}
+
+@media screen and (max-width: 300px) {
+  /* Smaller screens */
+  .table-row {
+    width: 600px !important;
+  }
+
+  /* Adjust other styles as needed for smaller screens */
+}
+@media only screen and (max-width: 700px) {
+  .table-row {
+    display: block;
+    width: 100%;
+    white-space: nowrap;
+  }
+
+  .table-head,
+  .table-row > td {
+    display: inline-block;
+    width: auto;
+    padding: 10px;
+    vertical-align: top;
+  }
+
+  .action {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+}
+
 </style>

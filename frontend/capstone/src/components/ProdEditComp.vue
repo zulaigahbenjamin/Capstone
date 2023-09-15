@@ -1,33 +1,31 @@
 <template>
   <div>
     <div class="container flex-container" v-if="product">
-<form @submit.prevent="updateProduct" >
-      <label for="productName">Name</label>
-      <input type="text" autocomplete="off" required id="productName" name="productName" v-model="product.prodName"
-        :placeholder="product.prodName" />
+      <form @submit.prevent="updateProduct">
+        
+        <label for="productName">Name</label>
+        <input type="text" autocomplete="off" required id="productName" name="productName" v-model="product.prodName"
+          :placeholder="product.prodName" />
 
-      <label for="quantity">Quantity</label>
-      <input type="text" autocomplete="off" required id="quantity" name="quantity" v-model="product.quantity"
-        :placeholder="product.quantity" />
+        <label for="quantity">Quantity</label>
+        <input type="text" autocomplete="off" required id="quantity" name="quantity" v-model="product.quantity"
+          :placeholder="product.quantity" />
 
-      <label for="quantity">Price</label>
-      <input type="text" autocomplete="off" required id="amount" name="amount" v-model="product.amount"
-        :placeholder="product.amount" />
+        <label for="quantity">Price</label>
+        <input type="text" autocomplete="off" required id="amount" name="amount" v-model="product.amount"
+          :placeholder="product.amount" />
 
-      <label for="quantity">Category</label>
-      <input type="text" autocomplete="off" required id="category" name="category" v-model="product.category"
-        :placeholder="product.category" />
+        <label for="quantity">Category</label>
+        <input type="text" autocomplete="off" required id="category" name="category" v-model="product.category"
+          :placeholder="product.category" />
 
-      <label for="image">Image</label>
-      <input type="text" autocomplete="off" required id="prodUrl" name="prodUrl" v-model="product.prodUrl"
-        :placeholder="product.prodUrl" />
+        <label for="image">Image</label>
+        <input type="text" autocomplete="off" required id="prodUrl" name="prodUrl" v-model="product.prodUrl"
+          :placeholder="product.prodUrl" />
 
-      <label for="category">Category</label>
-      <input type="text" autocomplete="off" required id="category" name="category" v-model="product.category"
-        :placeholder="product.category" />
-
-      <button  class="btn-submit" type="submit">Submit</button>
-    </form>
+     
+        <button class="btn-submit" type="submit">Submit</button>
+      </form>
     </div>
   </div>
 </template>
@@ -36,16 +34,22 @@
 
 
 export default {
+  props: {
+    prodId: Number, // Define id as a prop of type Number
+  },
 
   data() {
     return {
-    prodId: "",
-        prodName: "",
-        quantity: "",
-        amount: "",
-        category: "",
-        prodUrl: "https://i.postimg.cc/43GzNPSc/img1.jpg",
+      product: {
+     
+      prodName: "",
+      quantity: "",
+      amount: "",
+      category: "",
+      prodUrl: "",
       }
+   
+    }
 
 
   },
@@ -53,7 +57,7 @@ export default {
     async updateProduct() {
       try {
         const payload = {
-          prodId: this.$route.params.id,
+        
           prodName: this.product.prodName,
           quantity: this.product.quantity,
           amount: this.product.amount,
@@ -61,12 +65,12 @@ export default {
           prodUrl: this.product.prodUrl,
         };
         await this.$store.dispatch("updateProduct", payload);
-        this.prodId = "",
-        this.prodName = "";
-        this.quantity = "";
-        this.amount = "";
-        this.category = "";
-        this.prodUrl = "";
+       
+        this.product.prodName = "";
+        this.product.quantity = "";
+        this.product.amount = "";
+        this.product.category = "";
+        this.product.prodUrl = "";
 
         this.$router.push("/admin");
         alert("Product has been updated");
@@ -74,16 +78,25 @@ export default {
         console.log(err);
       }
     },
+    async updateProduct(updatedProduct) {
+  // Check if this.products is defined before using findIndex
+  if (this.products && this.products.length > 0) {
+    const index = this.products.findIndex(product => product.id === updatedProduct.id);
+    if (index !== -1) {
+      // Update the product in the array
+      this.products[index] = updatedProduct;
+    }
+  }
+},
+
   },
   computed: {
-    product() {
-      return this.$store.state.product;
-    },
+   
   },
   mounted() {
     // Fetch product data from the store if not already loaded
     if (!this.product) {
-      this.$store.dispatch("fetchProduct", this.$route.params.id);
+      this.$store.dispatch("fetchProducts");
     }
   },
 };

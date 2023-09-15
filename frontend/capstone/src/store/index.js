@@ -111,12 +111,13 @@ export default createStore({
       state.products = state.products.filter((product) => product.id !== productId);
     },
     //update
-    updateProduct(state, data) {
-      const index = state.products.findIndex(product => product.id === data.id);
+    updateProduct(updatedProduct) {
+      const index = this.products.findIndex(product => product.id === updatedProduct.id);
       if (index !== -1) {
-        state.products[index] = data;
+        this.products[index] = updatedProduct;
       }
     },
+    
 
     updateUser(state, data) {
       const index = state.users.findIndex(user => user.id === data.id);
@@ -137,6 +138,8 @@ export default createStore({
       state.userLog = userLog;
     }
   },
+
+  
   actions: {
     async fetchUsers(context) {
       try {
@@ -148,17 +151,19 @@ export default createStore({
       }
     },
 
-    getUser: async (context, userId) => {
+    async fetchUser(context, id) {
       try {
-        const res = await get(`${apiUrl}user/${userId}`);
-        if (!res.ok) {
-          throw new Error("Failed to fetch user by Id");
+        const response = await fetch(`${apiUrl}users/` + id);
+        const { results } = await response.json();
+        if (results) {
+          context.commit("setUser", results);
         }
-        const user = await res.json();
-
-        context.commit("setUser", user);
-      } catch (error) {
-        console.error(error);
+        else {
+          alert('Unable to retrieve user ID')
+        }
+      }
+      catch (err) {
+        console.error(err);
       }
     },
 
@@ -172,11 +177,11 @@ export default createStore({
       }
     },
 
-    async fetchProduct(prodId) {
+    async fetchProduct(context, id) {
       try {
-        let response = await fetch(`${apiUrl}product/${prodId}`);
-        let { result } = await response.json();
-        context.commit("SET_PRODUCT", result);
+        let response = await fetch(`${apiUrl}product/${id}`);
+        let {results} = await response.json();
+        context.commit("SET_PRODUCT", results);
       } catch (error) {
         alert(error.message);
       }
@@ -238,17 +243,7 @@ export default createStore({
 
 
 
-    // cookieCheck(context) {
-    //   const token = cookies.get("userToken");
-    //   if (token) {
-    //     context.commit("setToken", token);
-    //   }
-    // },
-
-    // init(context) {
-    //   context.dispatch("cookieCheck");
-    // },
-
+   
 
     //logout
     async logout(context) {
@@ -376,26 +371,23 @@ export default createStore({
     //add user
 
 
-
-
     //add product
-    async updateProduct(context, payload) {
+    async updateProducts(context, payload) {
       try {
-        const { res } = await axios.put(
-          `${apiUrl}products/${payload.prodId}`,
-          payload
-        );
-        const { msg, err } = res.data;
-        if (msg) {
-          context.commit("setProduct", msg);
-        }
-        if (err) {
-          context.commit("setMsg", err);
-        }
-      } catch (e) {
-        context.commit("setMsg", "an error occured");
+        const response = await axios.patch(`https://zulaigahcapstoneapi.onrender.com/product/${payload.prodI}`, payload);
+        const productToEdit = response.data;
+        context.dispatch("fetchProducts");
+        sweet({
+          title: "Product Updated",
+          text: productToEdit.msg,
+          icon: "success",
+          timer: 2000
+        })
+      } catch (error) {
+        console.error(error);
       }
     },
+    
     async deleteProduct(context, id) {
       try {
         // Send a DELETE request to delete the user

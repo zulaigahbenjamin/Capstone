@@ -40,7 +40,7 @@
               <router-link to="/cart"><i class="fa-solid fa-cart-shopping fa-lg" style="color: #000000;"></i></router-link>
             </li>
             <li id="fade-in">
-              <router-link to="/login"><i class="fa-regular fa-user fa-lg" style="color: #000000;"></i></router-link>
+              <router-link to="/userprofile"><i class="fa-regular fa-user fa-lg" style="color: #000000;"></i></router-link>
             </li>
             <li id="fade-in">
               <router-link to="/login" @click="logout()">Logout</router-link>
