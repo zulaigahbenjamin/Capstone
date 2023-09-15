@@ -65,39 +65,34 @@
 
         </div>
         <div class="category-box">
-          <div class="box woman-box">
-            <div class="box-content b2">
-              <h3 class="prod-shop">FACIAL SKIN CARE</h3>
-              <label class="prod-shop">FOR DRY SKIN</label>
-              <button style="color:chocolate;" class="feature-btn" ><router-link to="/products">Here</router-link>
-                </button>
-            </div>
-            <img src="https://i.postimg.cc/J0P0zZQB/Prods-1.jpg" loading="lazy" class="image-feature">
-          </div>
+        
           <div class="box man-box">
             <div class="box-content b2">
              
              
               
-                <button class="learn-more"><router-link to="/products">CLick here</router-link></button>
+              <div class="feature-btn"><router-link to="/products">Here</router-link></div>             
             </div>
             <img src="https://i.postimg.cc/x1H99r49/arabica-coffee.png" loading="lazy" class="image-feature">
+          <h3>Arabica Bean</h3>
           </div>
           <div class="box man-box">
             <div class="box-content b2">
               <h3 class="prod-shop" style="color:#eb5e28 ;"></h3>
-              <label class="prod-shop" style="color:#eb5e28 ;">COMBINATION SKIN</label>
-              <a style="background-color:white ; color: #eb5e28;" class="feature-btn" href="./Products.vue">Go Here</a>
+              <div class="feature-btn"><router-link to="/products">Here</router-link></div>             
             </div>
-            <img src="https://i.postimg.cc/dtCYgBMS/K-images.jpg" loading="lazy" class="image-feature">
+            <img src="https://i.postimg.cc/RVYwjtjj/slender-wonder-arabica-beans.png" loading="lazy" class="image-feature">
+         <h3>Slender Wonder</h3>
           </div>
           <div class="box man-box">
             <div class="box-content b2">
-              <h3 class="prod-shop" style="color: #3f9bd4;">FOOT SKIN CARE</h3>
-              <label class="prod-shop" style="color: #3f9bd4;">COMBINATION SKIN</label>
-              <a style="background-color: white;color: #3f9bd4;" class="feature-btn" href="./Products.vue">Go Here</a>
+              
+          
+              <div class="feature-btn"><router-link to="/products">Here</router-link></div> 
+                        
             </div>
             <img src="https://i.postimg.cc/bvTLnJBL/uber-coffee-italian-blend-beans-1kg-600x.webp" loading="lazy" class="image-feature">
+         <h3>Italian Coffe Blend</h3>  
           </div>
         </div>
       </div>
