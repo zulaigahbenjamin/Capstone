@@ -27,19 +27,26 @@ class Products{
         })
     }
    
-    addProduct(req,res){
-        const data =req.body
-       
-        const query =`
-        INSERT INTO products
-        SET ?
+    addProduct(req, res) {
+        const data = req.body;
+
+        if (!data.prodId) {
+            return res.json({
+                status: res.statusCode,
+                msg: "No prodId inserted"
+            })
+        };
+        
+        const query = `
+            INSERT INTO products
+            SET ? ;
         `
-        db.query(query,[data],(err)=>{
+
+        db.query(query, data, (err) => {
             if (err) throw err
-          
             res.json({
-                status:res.statusCode,
-                msg:"Product was added."
+                status: res.statusCode,
+                msg: "Product has been successfully added"
             })
         })
     }
