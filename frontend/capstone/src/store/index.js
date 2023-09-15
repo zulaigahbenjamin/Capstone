@@ -24,7 +24,7 @@ export default createStore({
   },
 
   getters: {
- cartTotalPrice(state) {
+    cartTotalPrice(state) {
       // Use the reduce function to sum the amounts in the cart
       const totalPrice = state.cart.reduce(
         (total, product) => total + parseFloat(product.amount),
@@ -81,6 +81,9 @@ export default createStore({
     setCart(state, value) {
       state.cart = value;
     },
+    productData(state, product) {
+      state.error = product;
+    },
 
     addProductToCart(state, product) {
       state.cart.push(product);
@@ -102,30 +105,30 @@ export default createStore({
     },
     //admin
     addProduct(state, product) {
-      state.products.push(product); 
+      state.products.push(product);
     },
-  deleteProduct(state, productId) {
-    state.products = state.products.filter((product) => product.id !== productId);
-  },
-  //update
-  updateProduct(state, data) {
-    const index = state.products.findIndex(product => product.id === data.id);
-    if (index !== -1) {
-      state.products[index] = data;
-    }
-  },
-  
-  updateUser(state, data) {
-    const index = state.users.findIndex(user => user.id === data.id);
-    if (index !== -1) {
-      state.users[index] = data;
-    }
-  },
-  //delete
-  //delete user
-deleteUser(state, userId) {
-  state.users = state.users.filter((user) => user.id !== userId);
-},
+    deleteProduct(state, productId) {
+      state.products = state.products.filter((product) => product.id !== productId);
+    },
+    //update
+    updateProduct(state, data) {
+      const index = state.products.findIndex(product => product.id === data.id);
+      if (index !== -1) {
+        state.products[index] = data;
+      }
+    },
+
+    updateUser(state, data) {
+      const index = state.users.findIndex(user => user.id === data.id);
+      if (index !== -1) {
+        state.users[index] = data;
+      }
+    },
+    //delete
+    //delete user
+    deleteUser(state, userId) {
+      state.users = state.users.filter((user) => user.id !== userId);
+    },
 
     clearCart(state) {
       state.cartItems = [];
@@ -307,10 +310,31 @@ deleteUser(state, userId) {
         console.error(error);
       }
     },
-  
-  },
 
-  //USERS
+    async addProduct(context, payload) {
+      try {
+        const res = (await axios.post(`${apiUrl}product
+      `, payload));
+        if (res) {
+          context.dispatch("fetchProducts");
+          context.commit("SET_PRODUCT", context.data)
+          alert("Product added successfully");
+        } else {
+          alert("Failed to add product");
+        }
+      } catch (error) {
+        alert("Error adding product");
+      }
+    },
+
+
+
+
+
+
+
+
+    //USERS
     //update user
     async updateUser(context, payload) {
       try {
@@ -330,83 +354,67 @@ deleteUser(state, userId) {
       }
     },
 
-  //DELETE USER
-  async deleteUser(context, id) {
-    try {
-      // Send a DELETE request to delete the user
-      const response = await axios.delete(`${apiUrl}users/${id}`);
+    //DELETE USER
+    async deleteUser(context, id) {
+      try {
+        // Send a DELETE request to delete the user
+        const response = await axios.delete(`${apiUrl}users/${id}`);
 
-      if (response.status === 204) {
-        // User deleted successfully
-        context.commit("setUser", null); // Clear the user data in the store
-        console.log("User deleted successfully");
-      } else {
-        // Handle other response statuses or errors
-        console.error("Failed to delete user");
+        if (response.status === 204) {
+          // User deleted successfully
+          context.commit("setUser", null); // Clear the user data in the store
+          console.log("User deleted successfully");
+        } else {
+          // Handle other response statuses or errors
+          console.error("Failed to delete user");
+        }
+      } catch (error) {
+        console.error(error);
+        // Handle network errors or other exceptions
       }
-    } catch (error) {
-      console.error(error);
-      // Handle network errors or other exceptions
-    }
+    },
+    //add user
+
+
+
+
+    //add product
+    async updateProduct(context, payload) {
+      try {
+        const { res } = await axios.put(
+          `${apiUrl}products/${payload.prodId}`,
+          payload
+        );
+        const { msg, err } = res.data;
+        if (msg) {
+          context.commit("setProduct", msg);
+        }
+        if (err) {
+          context.commit("setMsg", err);
+        }
+      } catch (e) {
+        context.commit("setMsg", "an error occured");
+      }
+    },
+    async deleteProduct(context, id) {
+      try {
+        // Send a DELETE request to delete the user
+        const response = await axios.delete(`${apiUrl}products/${id}`);
+
+        if (response.status === 204) {
+          // User deleted successfully
+          context.commit("setProduct", null); // Clear the user data in the store
+          console.log("Product deleted successfully");
+        } else {
+          // Handle other response statuses or errors
+          console.error("Failed to delete product");
+        }
+      } catch (error) {
+        console.error(error);
+        // Handle network errors or other exceptions
+      }
+    },
   },
-   //add user
- 
-
-
-
-   //add product
-   async addProduct(context, productData) {
-    try {
-      const res = await axios.post(`${apiUrl}products`, productData);
-      if (res.status !== 200) {
-        throw new Error("Failed to add product");
-      }
-  
-      const product = res.data;
-      context.commit("addProduct", product); // Pass the payload to the mutation
-      context.commit("SET_PRODUCT", product); // Update the "product" state
-    } catch (error) {
-      console.error(error);
-    }
-  },
-  
-  
-  async updateProduct(context, payload) {
-    try {
-      const { res } = await axios.put(
-        `${apiUrl}products/${payload.prodId}`,
-        payload
-      );
-      const { msg, err } = res.data;
-      if (msg) {
-        context.commit("setProduct", msg);
-      }
-      if (err) {
-        context.commit("setMsg", err);
-      }
-    } catch (e) {
-      context.commit("setMsg", "an error occured");
-    }
-  },
-  async deleteProduct(context, id) {
-    try {
-      // Send a DELETE request to delete the user
-      const response = await axios.delete(`${apiUrl}products/${id}`);
-
-      if (response.status === 204) {
-        // User deleted successfully
-        context.commit("setProduct", null); // Clear the user data in the store
-        console.log("Product deleted successfully");
-      } else {
-        // Handle other response statuses or errors
-        console.error("Failed to delete product");
-      }
-    } catch (error) {
-      console.error(error);
-      // Handle network errors or other exceptions
-    }
-  },
-
   modules: {
 
   },

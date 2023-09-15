@@ -97,6 +97,30 @@ const routes = [
     path: '/admin',
     name: 'admin',
     component: () => import ('../views/AdminTable.vue'),
+    // beforeEnter: (to, from, next) => {
+    //   const user = store.state.user
+    //   if (!cookies.get("legitUser")) {
+    //     next('/');
+    //     sweetAlert({
+    //       title: "Error",
+    //       text: "User Not Logged In",
+    //       icon: "error",
+    //       timer: 1000,
+    //     });
+    //   } else if (user && user.role !== 'admin') {
+    //     // User is logged in but not an admin, redirect to an unauthorized page or show an error message
+    //     sweetAlert({
+    //       title: "Error",
+    //       text: "Access Denied. You are not an admin.",
+    //       icon: "error",
+    //       timer: 1000,
+    //     })
+    //   }
+
+    //   else {
+    //     next();
+    //   }
+    // }
    
   },
   

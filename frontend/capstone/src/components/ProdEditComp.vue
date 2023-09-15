@@ -39,7 +39,7 @@ export default {
 
   data() {
     return {
-    
+    prodId: "",
         prodName: "",
         quantity: "",
         amount: "",
@@ -61,6 +61,7 @@ export default {
           prodUrl: this.product.prodUrl,
         };
         await this.$store.dispatch("updateProduct", payload);
+        this.prodId = "",
         this.prodName = "";
         this.quantity = "";
         this.amount = "";
